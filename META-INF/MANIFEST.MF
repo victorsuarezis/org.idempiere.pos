@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ID_POS
+Bundle-SymbolicName: org.idempiere.ID_POS;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Ing. Victor Suárez - victor.suarez.is@gmail.com
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.adempiere.base;bundle-version="3.1.0",
+ org.adempiere.plugin.utils;bundle-version="3.1.0",
+ org.adempiere.ui;bundle-version="3.1.0",
+ org.adempiere.ui.swing;bundle-version="3.1.0"
+Bundle-Activator: org.adempiere.plugin.utils.AdempiereActivator
+Service-Component: OSGI-INF/ModelFactoryPOS.xml
