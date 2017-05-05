@@ -52,6 +52,7 @@ import org.compiere.util.CLogger;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.compiere.util.ValueNamePair;
+import org.idempiere.model.MPaymentProcessorPOS;
 
 /**
  * @author Mario Calderon, mario.calderon@westfalia-it.com, Systemhaus Westfalia, http://www.westfalia-it.com
@@ -353,7 +354,8 @@ public class CPOS {
 		log.info( "PosPanel.newOrder");
 		m_CurrentOrder = null;
 		int m_C_DocType_ID = m_POS.getC_DocType_ID();
-		int m_C_DocTypewholesale_ID = m_POS.getC_DocTypewholesale_ID();;
+		//int m_C_DocTypewholesale_ID = m_POS.getC_DocTypewholesale_ID();
+		int m_C_DocTypewholesale_ID = 0;
 		if (m_C_DocTypewholesale_ID > 0) {
 			//	Do you want to use the alternate Document type?
 			if (isDocType) {
@@ -1027,7 +1029,7 @@ public class CPOS {
 	 */
 	public ValueNamePair[] getCreditCards (BigDecimal amt) {
 		try {
-			MPaymentProcessor[] m_mPaymentProcessors = MPaymentProcessor.find (Env.getCtx(), null, null, 
+			MPaymentProcessor[] m_mPaymentProcessors = MPaymentProcessorPOS.find (Env.getCtx(), null, null, 
 					m_CurrentOrder.getAD_Client_ID (), m_CurrentOrder.getAD_Org_ID(), m_CurrentOrder.getC_Currency_ID (), amt, m_CurrentOrder.get_TrxName());
 			//
 			HashMap<String,ValueNamePair> map = new HashMap<String,ValueNamePair>(); //	to eliminate duplicates

@@ -29,6 +29,7 @@ import org.compiere.swing.CPanel;
 import org.compiere.util.Env;
 import org.compiere.util.Login;
 import org.compiere.util.Msg;
+import org.idempiere.util.EnvPOS;
 
 /**
  * 
@@ -53,7 +54,7 @@ public class POSLogin extends CDialog implements ActionListener {
 	 */
 	public POSLogin (VPOS posPanel)
 	{
-		super (Env.getWindow(posPanel.getWindowNo()),Msg.translate(posPanel.getCtx(), "Login"), true);
+		super (EnvPOS.getWindow(posPanel.getWindowNo()),Msg.translate(posPanel.getCtx(), "Login"), true);
 		init();
 		this.posPanel = posPanel;
 	}
