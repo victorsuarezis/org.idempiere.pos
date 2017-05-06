@@ -1,6 +1,6 @@
 /******************************************************************************
- * Product: Adempiere ERP & CRM Smart Business Solution                       *
- * Copyright (C) 1999-2007 ComPiere, Inc. All Rights Reserved.                *
+ * Product: iDempiere ERP & CRM Smart Business Solution                       *
+ * Copyright (C) 1999-2012 ComPiere, Inc. All Rights Reserved.                *
  * This program is free software, you can redistribute it and/or modify it    *
  * under the terms version 2 of the GNU General Public License as published   *
  * by the Free Software Foundation. This program is distributed in the hope   *
@@ -21,8 +21,8 @@ import java.sql.Timestamp;
 import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for C_POS
- *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS
+ *  @author iDempiere (generated) 
+ *  @version Release 3.1
  */
 public interface I_C_POS 
 {
@@ -31,7 +31,7 @@ public interface I_C_POS
     public static final String Table_Name = "C_POS";
 
     /** AD_Table_ID=748 */
-    public static final int Table_ID = MTable.getTable_ID(Table_Name);
+    public static final int Table_ID = 748;
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
 
@@ -62,8 +62,6 @@ public interface I_C_POS
 	  */
 	public int getAD_Org_ID();
 
-    /** Column name AD_Sequence_ID */
-
     /** Column name AutoLogoutDelay */
     public static final String COLUMNNAME_AutoLogoutDelay = "AutoLogoutDelay";
 
@@ -76,28 +74,6 @@ public interface I_C_POS
 	  * Automatically logout if terminal inactive for this period
 	  */
 	public int getAutoLogoutDelay();
-    public static final String COLUMNNAME_AD_Sequence_ID = "AD_Sequence_ID";
-
-	/** Set Sequence.
-	  * Document Sequence
-	  */
-	public void setAD_Sequence_ID (int AD_Sequence_ID);
-
-	/** Get Sequence.
-	  * Document Sequence
-	  */
-	public int getAD_Sequence_ID();
-
-	public I_AD_Sequence getAD_Sequence() throws RuntimeException;
-
-    /** Column name CashDrawer */
-    public static final String COLUMNNAME_CashDrawer = "CashDrawer";
-
-	/** Set CashDrawer	  */
-	public void setCashDrawer (String CashDrawer);
-
-	/** Get CashDrawer	  */
-	public String getCashDrawer();
 
     /** Column name C_BankAccount_ID */
     public static final String COLUMNNAME_C_BankAccount_ID = "C_BankAccount_ID";
@@ -157,18 +133,7 @@ public interface I_C_POS
 	  */
 	public int getC_DocType_ID();
 
-	public I_C_DocType getC_DocType() throws RuntimeException;
-
-    /** Column name C_DocTypewholesale_ID */
-    public static final String COLUMNNAME_C_DocTypewholesale_ID = "C_DocTypewholesale_ID";
-
-	/** Set C_DocTypewholesale_ID	  */
-	public void setC_DocTypewholesale_ID (int C_DocTypewholesale_ID);
-
-	/** Get C_DocTypewholesale_ID	  */
-	public int getC_DocTypewholesale_ID();
-
-	public I_C_DocType getC_DocTypewholesale() throws RuntimeException;
+	public org.compiere.model.I_C_DocType getC_DocType() throws RuntimeException;
 
     /** Column name C_POS_ID */
     public static final String COLUMNNAME_C_POS_ID = "C_POS_ID";
@@ -182,6 +147,15 @@ public interface I_C_POS
 	  * Point of Sales Terminal
 	  */
 	public int getC_POS_ID();
+
+    /** Column name C_POS_UU */
+    public static final String COLUMNNAME_C_POS_UU = "C_POS_UU";
+
+	/** Set C_POS_UU	  */
+	public void setC_POS_UU (String C_POS_UU);
+
+	/** Get C_POS_UU	  */
+	public String getC_POS_UU();
 
     /** Column name C_POSKeyLayout_ID */
     public static final String COLUMNNAME_C_POSKeyLayout_ID = "C_POSKeyLayout_ID";
@@ -197,6 +171,30 @@ public interface I_C_POS
 	public int getC_POSKeyLayout_ID();
 
 	public org.compiere.model.I_C_POSKeyLayout getC_POSKeyLayout() throws RuntimeException;
+
+    /** Column name CashDrawer */
+    public static final String COLUMNNAME_CashDrawer = "CashDrawer";
+
+	/** Set CashDrawer	  */
+	public void setCashDrawer (String CashDrawer);
+
+	/** Get CashDrawer	  */
+	public String getCashDrawer();
+
+    /** Column name CashTransferBankAccount_ID */
+    public static final String COLUMNNAME_CashTransferBankAccount_ID = "CashTransferBankAccount_ID";
+
+	/** Set Transfer Cash trx to.
+	  * Bank Account on which to transfer all Cash transactions
+	  */
+	public void setCashTransferBankAccount_ID (int CashTransferBankAccount_ID);
+
+	/** Get Transfer Cash trx to.
+	  * Bank Account on which to transfer all Cash transactions
+	  */
+	public int getCashTransferBankAccount_ID();
+
+	public org.compiere.model.I_C_BankAccount getCashTransferBankAccount() throws RuntimeException;
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -214,6 +212,19 @@ public interface I_C_POS
 	  */
 	public int getCreatedBy();
 
+    /** Column name DeliveryRule */
+    public static final String COLUMNNAME_DeliveryRule = "DeliveryRule";
+
+	/** Set Delivery Rule.
+	  * Defines the timing of Delivery
+	  */
+	public void setDeliveryRule (String DeliveryRule);
+
+	/** Get Delivery Rule.
+	  * Defines the timing of Delivery
+	  */
+	public String getDeliveryRule();
+
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
 
@@ -226,6 +237,19 @@ public interface I_C_POS
 	  * Optional short description of the record
 	  */
 	public String getDescription();
+
+    /** Column name ElectronicScales */
+    public static final String COLUMNNAME_ElectronicScales = "ElectronicScales";
+
+	/** Set ElectronicScales.
+	  * Allows to define path for Device Electronic Scales e.g. /dev/ttyS0/
+	  */
+	public void setElectronicScales (String ElectronicScales);
+
+	/** Get ElectronicScales.
+	  * Allows to define path for Device Electronic Scales e.g. /dev/ttyS0/
+	  */
+	public String getElectronicScales();
 
     /** Column name Help */
     public static final String COLUMNNAME_Help = "Help";
@@ -240,6 +264,19 @@ public interface I_C_POS
 	  */
 	public String getHelp();
 
+    /** Column name InvoiceRule */
+    public static final String COLUMNNAME_InvoiceRule = "InvoiceRule";
+
+	/** Set Invoice Rule.
+	  * Frequency and method of invoicing 
+	  */
+	public void setInvoiceRule (String InvoiceRule);
+
+	/** Get Invoice Rule.
+	  * Frequency and method of invoicing 
+	  */
+	public String getInvoiceRule();
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 
@@ -252,6 +289,15 @@ public interface I_C_POS
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name IsEnableProductLookup */
+    public static final String COLUMNNAME_IsEnableProductLookup = "IsEnableProductLookup";
+
+	/** Set Enable POS Product Lookup	  */
+	public void setIsEnableProductLookup (boolean IsEnableProductLookup);
+
+	/** Get Enable POS Product Lookup	  */
+	public boolean isEnableProductLookup();
 
     /** Column name IsModifyPrice */
     public static final String COLUMNNAME_IsModifyPrice = "IsModifyPrice";
@@ -266,6 +312,19 @@ public interface I_C_POS
 	  */
 	public boolean isModifyPrice();
 
+    /** Column name IsPOSRequiredPIN */
+    public static final String COLUMNNAME_IsPOSRequiredPIN = "IsPOSRequiredPIN";
+
+	/** Set Is POS Required PIN.
+	  * Indicates that a Supervisor Pin is mandatory to execute some tasks e.g. (Change Price , Offer Discount , Delete POS Line)
+	  */
+	public void setIsPOSRequiredPIN (boolean IsPOSRequiredPIN);
+
+	/** Get Is POS Required PIN.
+	  * Indicates that a Supervisor Pin is mandatory to execute some tasks e.g. (Change Price , Offer Discount , Delete POS Line)
+	  */
+	public boolean isPOSRequiredPIN();
+
     /** Column name M_PriceList_ID */
     public static final String COLUMNNAME_M_PriceList_ID = "M_PriceList_ID";
 
@@ -279,18 +338,7 @@ public interface I_C_POS
 	  */
 	public int getM_PriceList_ID();
 
-	public I_M_PriceList getM_PriceList() throws RuntimeException;
-
-    /** Column name M_PriceListWholesale_ID */
-    public static final String COLUMNNAME_M_PriceListWholesale_ID = "M_PriceListWholesale_ID";
-
-	/** Set M_PriceListWholesale_ID	  */
-	public void setM_PriceListWholesale_ID (int M_PriceListWholesale_ID);
-
-	/** Get M_PriceListWholesale_ID	  */
-	public int getM_PriceListWholesale_ID();
-
-	public I_M_PriceList getM_PriceListWholesale() throws RuntimeException;
+	public org.compiere.model.I_M_PriceList getM_PriceList() throws RuntimeException;
 
     /** Column name M_Warehouse_ID */
     public static final String COLUMNNAME_M_Warehouse_ID = "M_Warehouse_ID";
@@ -305,7 +353,20 @@ public interface I_C_POS
 	  */
 	public int getM_Warehouse_ID();
 
-	public I_M_Warehouse getM_Warehouse() throws RuntimeException;
+	public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException;
+
+    /** Column name MeasureRequestCode */
+    public static final String COLUMNNAME_MeasureRequestCode = "MeasureRequestCode";
+
+	/** Set Measure Request Code.
+	  * String for  taking measurement from Device Electronic Scales
+	  */
+	public void setMeasureRequestCode (String MeasureRequestCode);
+
+	/** Get Measure Request Code.
+	  * String for  taking measurement from Device Electronic Scales
+	  */
+	public String getMeasureRequestCode();
 
     /** Column name Name */
     public static final String COLUMNNAME_Name = "Name";
@@ -350,6 +411,19 @@ public interface I_C_POS
 
 	public org.compiere.model.I_C_POSKeyLayout getOSNP_KeyLayout() throws RuntimeException;
 
+    /** Column name PINEntryTimeout */
+    public static final String COLUMNNAME_PINEntryTimeout = "PINEntryTimeout";
+
+	/** Set PIN Entry Timeout.
+	  * PIN Entry Timeout - the amount of time from initial display until the PIN entry dialog times out, in milliseconds.
+	  */
+	public void setPINEntryTimeout (int PINEntryTimeout);
+
+	/** Get PIN Entry Timeout.
+	  * PIN Entry Timeout - the amount of time from initial display until the PIN entry dialog times out, in milliseconds.
+	  */
+	public int getPINEntryTimeout();
+
     /** Column name PrinterName */
     public static final String COLUMNNAME_PrinterName = "PrinterName";
 
@@ -377,6 +451,19 @@ public interface I_C_POS
 	public int getSalesRep_ID();
 
 	public org.compiere.model.I_AD_User getSalesRep() throws RuntimeException;
+
+    /** Column name TicketClassName */
+    public static final String COLUMNNAME_TicketClassName = "TicketClassName";
+
+	/** Set Ticket Handler Class Name.
+	  * Java Classname for Ticket Handler
+	  */
+	public void setTicketClassName (String TicketClassName);
+
+	/** Get Ticket Handler Class Name.
+	  * Java Classname for Ticket Handler
+	  */
+	public String getTicketClassName();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
