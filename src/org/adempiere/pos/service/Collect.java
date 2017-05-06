@@ -32,6 +32,7 @@ import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.compiere.util.Msg;
 import org.compiere.util.ValueNamePair;
+import org.idempiere.model.MPaymentProcessorPOS;
 
 /**
  * @author Mario Calderon, mario.calderon@westfalia-it.com, Systemhaus Westfalia, http://www.westfalia-it.com
@@ -685,7 +686,7 @@ public class Collect {
 	{
 		try
 		{
-			MPaymentProcessor[] m_mPaymentProcessors = MPaymentProcessor.find (Env.getCtx(), null, null, 
+			MPaymentProcessor[] m_mPaymentProcessors = MPaymentProcessorPOS.find (Env.getCtx(), null, null, 
 					p_AD_Client_ID,  p_AD_Org_ID, p_C_Currency_ID, p_amt, p_TrxName);
 			//
 			HashMap<String,ValueNamePair> map = new HashMap<String,ValueNamePair>(); //	to eliminate duplicates

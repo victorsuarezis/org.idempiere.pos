@@ -46,6 +46,7 @@ import org.compiere.swing.CPanel;
 import org.compiere.swing.CScrollPane;
 import org.compiere.util.CLogger;
 import org.compiere.util.Env;
+import org.idempiere.util.EnvPOS;
 
 /**
  * 
@@ -256,7 +257,7 @@ public abstract class POSQuery extends CDialog
 	 * 	Constructor
 	 */
 	public POSQuery (VPOS posPanel) {
-		super(Env.getWindow(posPanel.getWindowNo()), true);
+		super(EnvPOS.getWindow(posPanel.getWindowNo()), true);
 		v_POSPanel = posPanel;
 		m_ctx = posPanel.getCtx();
 		initMainPanel();

@@ -14,6 +14,7 @@
 
 package org.adempiere.pos;
 
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -89,7 +90,7 @@ public class POSKeyboard extends CDialog
 	 * @param posPanel
 	 * @param keyLayoutId
 	 */
-	public POSKeyboard(CPanel posPanel, int keyLayoutId) {
+	public POSKeyboard(Container posPanel, int keyLayoutId) {
 		super(EnvPOS.getFrame(posPanel), true);
 		m_Keylayout = MPOSKeyLayout.get(Env.getCtx(), keyLayoutId);
 		init(keyLayoutId);

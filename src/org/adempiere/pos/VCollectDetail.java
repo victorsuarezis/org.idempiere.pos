@@ -42,9 +42,11 @@ import org.adempiere.plaf.AdempierePLAF;
 import org.adempiere.pos.service.CollectDetail;
 import org.adempiere.pos.service.I_POSPanel;
 import org.compiere.apps.AppsAction;
-import org.compiere.grid.ed.VComboBox;
+//import org.compiere.grid.ed.VComboBox;
+import org.compiere.grid.ed.VComboBoxPOS;
 import org.compiere.grid.ed.VDate;
 import org.compiere.grid.ed.VLookup;
+import org.compiere.grid.ed.VLookupPOS;
 import org.compiere.grid.ed.VNumber;
 import org.compiere.model.MLookup;
 import org.compiere.model.MLookupFactory;
@@ -86,16 +88,16 @@ public class VCollectDetail extends CollectDetail
 	
 	/**	Credit Card			*/
 	private CPanel 			v_CreditPanel;
-	private VLookup 		fCreditCardType;
+	private VLookupPOS 		fCreditCardType;
 	private POSTextField 	fCreditCardNumber;
 	private POSTextField 	fA_Name;
-	private VComboBox 		fCreditCardExpMM;
-	private VComboBox 		fCreditCardExpYY;
+	private VComboBoxPOS 		fCreditCardExpMM;
+	private VComboBoxPOS 		fCreditCardExpYY;
 	private POSTextField 	fCreditCardVV;
 	
 	/**	Generic Values		*/
 	private Properties 		p_ctx;
-	private VLookup 		fTenderType;
+	private VLookupPOS 		fTenderType;
 	private VNumber 		fPayAmt;
 	private VCollect 		v_Parent;
 	
@@ -141,10 +143,10 @@ public class VCollectDetail extends CollectDetail
 		//	For Tender Type
 		int AD_Column_ID = 8416;        //  C_Payment_v.TenderType
 		MLookup lookup = MLookupFactory.get(Env.getCtx(), 0, 0, AD_Column_ID, DisplayType.List);
-		fTenderType = new VLookup("TenderType", true, false, true, lookup);
-		((VComboBox)fTenderType.getCombo()).setRenderer(new POSLookupCellRenderer(font));
+		fTenderType = new VLookupPOS("TenderType", true, false, true, lookup);
+		((VComboBoxPOS)fTenderType.getCombo()).setRenderer(new POSLookupCellRenderer(font));
 		fTenderType.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
-		((VComboBox)fTenderType.getCombo()).setFont(font);
+		((VComboBoxPOS)fTenderType.getCombo()).setFont(font);
 		fTenderType.addVetoableChangeListener(this);
 		//	For Amount
 		fPayAmt = new VNumber("PayAmt", true, false, true, DisplayType.Amount, "");
@@ -262,11 +264,11 @@ public class VCollectDetail extends CollectDetail
 		//	For Credit Card
 		int AD_Column_ID = 8374; 			//C_Payment_v.CreditCardType
 		MLookup cardlookup = MLookupFactory.get(Env.getCtx(), 0, 0, AD_Column_ID, DisplayType.List);
-		fCreditCardType = new VLookup("CreditCardType", true, false, true, cardlookup);
+		fCreditCardType = new VLookupPOS("CreditCardType", true, false, true, cardlookup);
 		//	For Credit Card Type
-		((VComboBox)fCreditCardType.getCombo()).setRenderer(new POSLookupCellRenderer(font));
+		((VComboBoxPOS)fCreditCardType.getCombo()).setRenderer(new POSLookupCellRenderer(font));
 		fCreditCardType.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
-		((VComboBox)fCreditCardType.getCombo()).setFont(font);
+		((VComboBoxPOS)fCreditCardType.getCombo()).setFont(font);
 		fCreditCardType.addVetoableChangeListener(this);
 		//	For Months
 		//	For Card No
@@ -286,7 +288,7 @@ public class VCollectDetail extends CollectDetail
 		fA_Name.addKeyListener(this);
 		fA_Name.addActionListener(this);
 		//	For Card Month
-		fCreditCardExpMM = new VComboBox(getCCMonths());
+		fCreditCardExpMM = new VComboBoxPOS(getCCMonths());
 		fCreditCardExpMM.setName("CreditCardExpMM");
 		fCreditCardExpMM.setValue(-1);
 		fCreditCardExpMM.setMandatory(true);
@@ -295,7 +297,7 @@ public class VCollectDetail extends CollectDetail
 		fCreditCardExpMM.setFont(font);
 		fCreditCardExpMM.addActionListener(this);
 		//	For Card Year
-		fCreditCardExpYY = new VComboBox(getCCYears());
+		fCreditCardExpYY = new VComboBoxPOS(getCCYears());
 		fCreditCardExpYY.setName("CreditCardExpYY");
 		fCreditCardExpYY.setValue(-1);
 		fCreditCardExpYY.setMandatory(true);

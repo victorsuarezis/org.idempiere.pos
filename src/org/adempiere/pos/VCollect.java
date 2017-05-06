@@ -37,7 +37,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
-import org.adempiere.pipo.exception.POSaveFailedException;
+import org.adempiere.pipo2.exception.POSaveFailedException;
 import org.adempiere.pos.service.Collect;
 import org.adempiere.pos.service.CollectDetail;
 import org.adempiere.pos.service.I_POSPanel;
@@ -57,6 +57,7 @@ import org.compiere.util.Env;
 import org.compiere.util.Msg;
 import org.compiere.util.Trx;
 import org.compiere.util.TrxRunnable;
+import org.idempiere.util.EnvPOS;
 
 /**
  * @author Mario Calderon, mario.calderon@westfalia-it.com, Systemhaus Westfalia, http://www.westfalia-it.com
@@ -139,7 +140,7 @@ public class VCollect extends Collect
 	 */
 	private void jbInit() throws Exception {
 		//	Instance Dialog
-		v_Dialog = new CDialog(Env.getWindow(v_POSPanel.getWindowNo()), Msg.translate(m_ctx, "Payment"), true);
+		v_Dialog = new CDialog(EnvPOS.getWindow(v_POSPanel.getWindowNo()), Msg.translate(m_ctx, "Payment"), true);
 		//
 		mainLayout = new BorderLayout();
 		parameterLayout = new GridBagLayout();
