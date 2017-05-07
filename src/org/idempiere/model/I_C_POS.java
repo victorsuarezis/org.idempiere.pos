@@ -14,10 +14,11 @@
  * ComPiere, Inc., 2620 Augustine Dr. #245, Santa Clara, CA 95054, USA        *
  * or via info@compiere.org or http://www.compiere.org/license.html           *
  *****************************************************************************/
-package org.compiere.model;
+package org.idempiere.model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+
 import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for C_POS
@@ -61,6 +62,21 @@ public interface I_C_POS
 	  * Organizational entity within client
 	  */
 	public int getAD_Org_ID();
+
+    /** Column name AD_Sequence_ID */
+    public static final String COLUMNNAME_AD_Sequence_ID = "AD_Sequence_ID";
+
+	/** Set Sequence.
+	  * Document Sequence
+	  */
+	public void setAD_Sequence_ID (int AD_Sequence_ID);
+
+	/** Get Sequence.
+	  * Document Sequence
+	  */
+	public int getAD_Sequence_ID();
+
+	public org.compiere.model.I_AD_Sequence getAD_Sequence() throws RuntimeException;
 
     /** Column name AutoLogoutDelay */
     public static final String COLUMNNAME_AutoLogoutDelay = "AutoLogoutDelay";

@@ -15,16 +15,21 @@
  * or via info@compiere.org or http://www.compiere.org/license.html           *
  *****************************************************************************/
 /** Generated Model - DO NOT CHANGE */
-package org.compiere.model;
+package org.idempiere.model;
 
 import java.sql.ResultSet;
 import java.util.Properties;
+
+import org.compiere.model.I_Persistent;
+import org.compiere.model.MTable;
+import org.compiere.model.PO;
+import org.compiere.model.POInfo;
 import org.compiere.util.KeyNamePair;
 
 /** Generated Model for C_POS
  *  @author iDempiere (generated) 
  *  @version Release 3.1 - $Id$ */
-public class X_C_POS extends PO implements I_C_POS, I_Persistent 
+public class X_C_POS extends PO implements org.idempiere.model.I_C_POS, I_Persistent 
 {
 
 	/**
@@ -75,6 +80,34 @@ public class X_C_POS extends PO implements I_C_POS, I_Persistent
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	public org.compiere.model.I_AD_Sequence getAD_Sequence() throws RuntimeException
+    {
+		return (org.compiere.model.I_AD_Sequence)MTable.get(getCtx(), org.compiere.model.I_AD_Sequence.Table_Name)
+			.getPO(getAD_Sequence_ID(), get_TrxName());	}
+
+	/** Set Sequence.
+		@param AD_Sequence_ID 
+		Document Sequence
+	  */
+	public void setAD_Sequence_ID (int AD_Sequence_ID)
+	{
+		if (AD_Sequence_ID < 1) 
+			set_Value (COLUMNNAME_AD_Sequence_ID, null);
+		else 
+			set_Value (COLUMNNAME_AD_Sequence_ID, Integer.valueOf(AD_Sequence_ID));
+	}
+
+	/** Get Sequence.
+		@return Document Sequence
+	  */
+	public int getAD_Sequence_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_AD_Sequence_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 
 	/** Set Auto Logout Delay.
 		@param AutoLogoutDelay 

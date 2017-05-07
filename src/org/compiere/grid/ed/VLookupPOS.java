@@ -404,7 +404,7 @@ public class VLookupPOS extends JComponent
 	/** Search: The Button to open Editor   */
 	private CButton				m_button = new CButton();
 	/** The Combo Box if not a Search Lookup    */
-	private VComboBox			m_combo = new VComboBox();
+	private VComboBoxPOS			m_combo = new VComboBoxPOS();
 	/** Indicator that value is being set       */
 	private volatile boolean 	m_settingValue = false;
 	/** Indicator that docus is being set       */

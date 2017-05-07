@@ -34,7 +34,6 @@ import org.compiere.model.MLocator;
 import org.compiere.model.MOrder;
 import org.compiere.model.MOrderLine;
 import org.compiere.model.MOrderTax;
-import org.compiere.model.MPOS;
 import org.compiere.model.MPayment;
 import org.compiere.model.MPaymentProcessor;
 import org.compiere.model.MPriceList;
@@ -52,6 +51,7 @@ import org.compiere.util.CLogger;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.compiere.util.ValueNamePair;
+import org.idempiere.model.MPOS;
 import org.idempiere.model.MPaymentProcessorPOS;
 
 /**

@@ -22,10 +22,10 @@ import java.util.Properties;
 import javax.swing.KeyStroke;
 
 import org.compiere.apps.AppsAction;
-import org.compiere.model.MPOS;
 import org.compiere.swing.CButton;
 import org.compiere.swing.CPanel;
 import org.compiere.util.Env;
+import org.idempiere.model.MPOS;
 
 /**
  *	POS Sub Panel Base Class.

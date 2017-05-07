@@ -14,11 +14,16 @@
  * ComPiere, Inc., 2620 Augustine Dr. #245, Santa Clara, CA 95054, USA        *
  * or via info@compiere.org or http://www.compiere.org/license.html           *
  *****************************************************************************/
-package org.compiere.model;
+package org.idempiere.model;
 
 import java.sql.ResultSet;
 import java.util.Properties;
 import java.util.List;
+
+import org.compiere.model.MBPartner;
+import org.compiere.model.MCashBook;
+import org.compiere.model.MWarehouse;
+import org.compiere.model.Query;
 import org.compiere.util.CCache;
 import org.compiere.util.Msg;
 
@@ -29,7 +34,7 @@ import org.compiere.util.Msg;
  *  @author Jorg Janke
  *  @version $Id: MPOS.java,v 1.3 2006/07/30 00:51:05 jjanke Exp $
  */
-public class MPOS extends X_C_POS
+public class MPOS extends org.idempiere.model.X_C_POS
 {
 	/**
 	 * 
@@ -159,5 +164,4 @@ public class MPOS extends X_C_POS
 	public String toString() {
 		return super.getName();
 		}
-	
 }	//	MPOS

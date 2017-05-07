@@ -3,9 +3,9 @@ package org.idempiere.component;
 import java.sql.ResultSet;
 
 import org.adempiere.base.IModelFactory;
-import org.compiere.model.MPOS;
 import org.compiere.model.PO;
 import org.compiere.util.Env;
+import org.idempiere.model.MPOS;
 
 public class ModelFactoryPOS implements IModelFactory {
 

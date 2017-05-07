@@ -22,7 +22,6 @@ import java.util.Properties;
 
 import org.compiere.model.MInvoice;
 import org.compiere.model.MOrder;
-import org.compiere.model.MPOS;
 import org.compiere.model.MPayment;
 import org.compiere.model.MPaymentAllocate;
 import org.compiere.model.MPaymentProcessor;
@@ -32,6 +31,7 @@ import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.compiere.util.Msg;
 import org.compiere.util.ValueNamePair;
+import org.idempiere.model.MPOS;
 import org.idempiere.model.MPaymentProcessorPOS;
 
 /**

@@ -45,7 +45,6 @@ import org.compiere.apps.AppsAction;
 //import org.compiere.grid.ed.VComboBox;
 import org.compiere.grid.ed.VComboBoxPOS;
 import org.compiere.grid.ed.VDate;
-import org.compiere.grid.ed.VLookup;
 import org.compiere.grid.ed.VLookupPOS;
 import org.compiere.grid.ed.VNumber;
 import org.compiere.model.MLookup;

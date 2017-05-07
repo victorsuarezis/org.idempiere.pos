@@ -43,7 +43,6 @@ import org.adempiere.pos.service.I_POSPanel;
 import org.compiere.apps.ADialog;
 import org.compiere.apps.form.FormFrame;
 import org.compiere.apps.form.FormPanel;
-import org.compiere.model.MPOS;
 import org.compiere.pos.PosKeyboardFocusManager;
 import org.compiere.swing.CFrame;
 import org.compiere.swing.CPanel;
@@ -51,6 +50,7 @@ import org.compiere.util.CLogger;
 import org.compiere.util.DisplayType;
 import org.compiere.util.Env;
 import org.compiere.util.Msg;
+import org.idempiere.model.MPOS;
 
 /**
  * @author Mario Calderon, mario.calderon@westfalia-it.com, Systemhaus Westfalia, http://www.westfalia-it.com
