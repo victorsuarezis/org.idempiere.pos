@@ -14,3 +14,4 @@ Require-Bundle: org.adempiere.base;bundle-version="3.1.0",
 Bundle-Activator: org.adempiere.plugin.utils.AdempiereActivator
 Service-Component: OSGI-INF/ModelFactoryPOS.xml,
  OSGI-INF/FormFactoryPOS.xml
+Export-Package: org.adempiere.pos
