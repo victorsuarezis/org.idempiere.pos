@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import javax.swing.Box;
 
 import org.adempiere.controller.SmallViewEditable;
-import org.adempiere.webui.event.ValueChangeEvent;
+import org.adempiere.exceptions.ValueChangeEvent;
 import org.compiere.apps.ALayout;
 import org.compiere.apps.ALayoutConstraint;
 import org.compiere.grid.ed.VEditor;

@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 import org.adempiere.controller.SmallViewEditable;
-import org.adempiere.webui.event.ValueChangeEvent;
+import org.adempiere.exceptions.ValueChangeEvent;
 import org.compiere.grid.ed.VEditor;
 import org.compiere.grid.ed.VEditorFactory;
 import org.compiere.model.GridField;

@@ -15,4 +15,3 @@ Bundle-Activator: org.adempiere.plugin.utils.AdempiereActivator
 Service-Component: OSGI-INF/ModelFactoryPOS.xml,
  OSGI-INF/FormFactoryPOS.xml
 Export-Package: org.adempiere.pos
-Import-Package: org.adempiere.webui.event

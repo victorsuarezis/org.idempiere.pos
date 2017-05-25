@@ -17,7 +17,7 @@
 
 package org.adempiere.exceptions;
 
-import org.adempiere.webui.event.ValueChangeEvent;
+import org.adempiere.exceptions.ValueChangeEvent;
 
 /**
  *
