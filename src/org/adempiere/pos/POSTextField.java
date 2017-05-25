@@ -17,15 +17,15 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JFormattedTextField;
 
 import org.adempiere.plaf.AdempierePLAF;
-import org.compiere.apps.AEnv;
+import org.compiere.apps.AEnvPOS;
 
 /**
  * Formatted Text field with on-screen keyboard support
@@ -35,8 +35,8 @@ import org.compiere.apps.AEnv;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  * <li> Changes for generic use
  */
-public class POSTextField extends JFormattedTextField 
-		implements MouseListener, FocusListener {
+public class POSTextField extends JFormattedTextField
+		implements MouseListener , KeyListener {
 	
 	/**
 	 * 
@@ -46,91 +46,83 @@ public class POSTextField extends JFormattedTextField
 	/**
 	 * Text field with keyboard
 	 * *** Constructor ***
-	 * @param p_Title
-	 * @param p_Keyboard
+	 * @param title
+	 * @param keyboard
 	 */
-	public POSTextField(String p_Title, POSKeyboard p_Keyboard) {
+	public POSTextField(String title, POSKeyboard keyboard) {
 		super();
 		//	
-		m_Keyboard = p_Keyboard;
+		this.keyboard = keyboard;
 		//	Valid and add Listener
-		if (p_Keyboard != null) {
+		if (this.keyboard != null) {
 			addMouseListener(this);
 		}
 		//	Set Title
-		setName(p_Title);
+		setName(title);
 	}
 	
 	/**
 	 * Text field without keyboard
 	 * *** Constructor ***
-	 * @param p_Title
+	 * @param title
 	 */
-	public POSTextField(String p_Title) {
-		this(p_Title, null);
+	public POSTextField(String title) {
+		this(title, null);
 	}
 	
 	/**	Key Board				*/
-	private POSKeyboard 	m_Keyboard;
+	private POSKeyboard 	keyboard;
 	/**	Place Holder			*/
-	private String 			m_PlaceHolder;
+	private String 			placeHolder;
 	/**	Default Font			*/
-	private Font 			m_Font = AdempierePLAF.getFont_Field().deriveFont(Font.PLAIN, 18);
+	private Font 			defaultFont = AdempierePLAF.getFont_Field().deriveFont(Font.PLAIN, 16);
 	
-	public void mouseReleased(MouseEvent arg0) {
+	public void mouseReleased(MouseEvent mouseEvent) {
 		//	Not yet implemented
 	}
 
-	public void mousePressed(MouseEvent arg0) {
+	public void mousePressed(MouseEvent mouseEvent) {
 		//	Not yet implemented
 	}
 
-	public void mouseExited(MouseEvent arg0) {
-		//	Not yet implemented		
-	}
-
-	public void mouseEntered(MouseEvent arg0) {
+	public void mouseExited(MouseEvent mouseEvent) {
 		//	Not yet implemented
 	}
 
-	public void mouseClicked(MouseEvent arg0) {
+	public void mouseEntered(MouseEvent mouseEvent) {
+		//	Not yet implemented
+	}
+
+	public void mouseClicked(MouseEvent mouseEvent) {
 		//	When the mouse is clicked
 		if (isEnabled() 
 				&& isEditable()
-				&& m_Keyboard != null) {
-			m_Keyboard.setTitle(getName());
-			m_Keyboard.setPosTextField(this);
-			AEnv.positionCenterScreen(m_Keyboard);
-			m_Keyboard.setVisible(true);
-			if(m_Keyboard.isOk()) {
+				&& keyboard != null) {
+			keyboard.setTitle(getName());
+			keyboard.setPosTextField(this);
+			AEnvPOS.positionCenterScreen(keyboard);
+			keyboard.setVisible(true);
+			if(keyboard.isOk()) {
 				fireActionPerformed();
 			}
 		}
 	}
-
-	public void focusGained(FocusEvent e) {
-		//	Not yet implemented
-	}
-
-	public void focusLost(FocusEvent e) {
-		//	Not yet implemented
-	}
-
+	
 	/**
 	 * Get Place Holder
 	 * @return String
 	 */
 	public String getPlaceholder() {
-		return m_PlaceHolder;
+		return placeHolder;
 	}
 	
 	/**
 	 * Set Place Holder
-	 * @param p_PlaceHolder
+	 * @param placeHolder
 	 * @return void
 	 */
-	public void setPlaceholder(final String p_PlaceHolder) {
-		m_PlaceHolder = p_PlaceHolder;
+	public void setPlaceholder(final String placeHolder) {
+		this.placeHolder = placeHolder;
 	}
 
 	@Override
@@ -138,8 +130,8 @@ public class POSTextField extends JFormattedTextField
 		super.paintComponent(pG);
 		
 		//	Valid Null
-		if (m_PlaceHolder == null
-				|| m_PlaceHolder.length() == 0 
+		if (placeHolder == null
+				|| placeHolder.length() == 0
 				|| getText().length() > 0) {
 			return;
 		}
@@ -148,7 +140,22 @@ public class POSTextField extends JFormattedTextField
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(getDisabledTextColor());
-		g.setFont(m_Font);
-		g.drawString(m_PlaceHolder, getMargin().left  ,(getSize().height)/2 + getFont().getSize()/2 );
+		g.setFont(defaultFont);
+		g.drawString(placeHolder, getMargin().left  ,(getSize().height)/2 + getFont().getSize()/2 );
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+
 	}
 }

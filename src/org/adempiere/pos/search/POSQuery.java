@@ -21,6 +21,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
@@ -28,16 +29,19 @@ import java.beans.VetoableChangeListener;
 import java.util.Properties;
 
 import javax.swing.KeyStroke;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.SwingUtilities;
 
+import org.adempiere.pos.POSTextField;
+import org.adempiere.pos.VPOS;
+import org.adempiere.pos.service.POSQueryInterface;
+import org.adempiere.pos.service.POSQueryListener;
+import org.compiere.apps.AEnvPOS;
 import org.compiere.apps.AppsAction;
+import org.compiere.apps.StatusBar;
 import org.compiere.grid.ed.VDate;
 import org.compiere.grid.ed.VNumber;
 import org.compiere.model.PO;
-import org.compiere.pos.PosTable;
-import org.adempiere.pos.POSTextField;
-import org.adempiere.pos.VPOS;
+import org.adempiere.pos.POSTable;
 import org.compiere.swing.CButton;
 import org.compiere.swing.CCheckBox;
 import org.compiere.swing.CComboBox;
@@ -45,7 +49,6 @@ import org.compiere.swing.CDialog;
 import org.compiere.swing.CPanel;
 import org.compiere.swing.CScrollPane;
 import org.compiere.util.CLogger;
-import org.compiere.util.Env;
 import org.idempiere.util.EnvPOS;
 
 /**
@@ -56,10 +59,12 @@ import org.idempiere.util.EnvPOS;
  *  @author Mario Calderon, mario.calderon@westfalia-it.com, Systemhaus Westfalia, http://www.westfalia-it.com
  *  @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *  @author Dixon Martinez, dmartinez@erpcya.com, ERPCYA http://www.erpcya.com
+ *  @author victor.perez@e-evolution.com , http://www.e-evolution.com
  *  @version $Id: PosQuery.java,v 2.0 2015/09/01 00:00:00 
  */
-public abstract class POSQuery extends CDialog 
-	implements MouseListener, ListSelectionListener, ActionListener, VetoableChangeListener {
+public abstract class POSQuery extends CDialog
+	implements MouseListener, ActionListener, KeyListener ,
+		VetoableChangeListener, POSQueryInterface {
 
 	/**
 	 * 
@@ -67,36 +72,45 @@ public abstract class POSQuery extends CDialog
 	private static final long serialVersionUID = -6379099059318219432L;
 	
 	/**	Context			*/
-	protected Properties 	m_ctx;
+	protected Properties 	ctx;
 	/** POS Panel		*/
-	protected VPOS 			v_POSPanel = null;
+	protected VPOS 			posPanel = null;
 	/** The Table		*/
-	protected PosTable 		m_table;
+	protected POSTable 		posTable;
 	/**	New Action		*/
-	private CButton 		f_New;
+	private CButton 		buttonNew;
+	/**	Edit Action		*/
+	private CButton 		buttonEdit;
 	/**	Refresh Action	*/
-	private CButton 		f_Reset;
+	private CButton 		buttonReset;
 	/**	Refresh Action	*/
-	private CButton 		f_Refresh;
+	private CButton 		buttonRefresh;
 	/**	Ok Action		*/
-	private CButton 		f_Ok;
+	private CButton 		buttonOk;
 	/**	Cancel Action	*/
-	private CButton 		f_Cancel;
+	private CButton 		buttonCancel;
 	/**	North Panel		*/
-	protected CPanel 		v_ParameterPanel;
+	protected CPanel 		parameterPanel;
 	/**	Center Scroll	*/
-	private CScrollPane 	v_CenterScroll;
+	private CScrollPane 	centerScroll;
 	/**	Confirm Panel	*/
-	private CPanel 			v_ConfirmPanel;
+	private CPanel 			confirmPanel;
 	/**	Main Panel		*/
-	private CPanel 			v_MainPanel;
+	private CPanel 			mainPanel;
+
+	/** Status Bar 					*/
+	private StatusBar statusBar;
 	
 	/**	Logger			*/
-	protected static CLogger log = CLogger.getCLogger(QueryProduct.class);
+	protected static CLogger logger = CLogger.getCLogger(QueryOrderHistory.class);
+	/**	Listener		*/
+	private POSQueryListener listener;
 	/**	Default Width	*/
 	private final int		BUTTON_WIDTH 	= 50;
 	/**	Default Height		*/
 	private final int		BUTTON_HEIGHT 	= 50;
+	/** Status bar info				*/
+	private String 			statusBarInfo;
 	
 	
 	public POSQuery() throws HeadlessException {
@@ -108,78 +122,144 @@ public abstract class POSQuery extends CDialog
 	 * @return void
 	 */
 	private void initMainPanel() {
+		statusBarInfo = "";
 		//	Instance Panel
+		setLayout(new GridBagLayout());
 		//	For Table
-		m_table = new PosTable();
-		v_MainPanel = new CPanel(new GridBagLayout());		
-		v_ParameterPanel = new CPanel(new GridBagLayout());
-		v_CenterScroll = new CScrollPane(m_table);
-		v_ConfirmPanel = new CPanel(new GridBagLayout());
+		posTable = new POSTable();
+		mainPanel = new CPanel(new GridBagLayout());
+		mainPanel.setFocusCycleRoot(true);
+		statusBar = new StatusBar();
+
+		posTable.growScrollbars();
+
+		parameterPanel = new CPanel(new GridBagLayout());
+		centerScroll = new CScrollPane(posTable);
+		confirmPanel = new CPanel(new GridBagLayout());
 		//	
-		v_CenterScroll.setPreferredSize(new Dimension(800, 400));
+		centerScroll.setPreferredSize(new Dimension(800, 400));
 		//	
 		
 		//	Create Buttons
-		f_New = createButtonAction("New", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
-		f_Reset = createButtonAction("Reset", KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0));
-		f_Refresh = createButtonAction("Refresh", KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
-		f_Cancel = createButtonAction("Cancel", KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
-		f_Ok = createButtonAction("Ok", KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
+		buttonNew = createButtonAction("New", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+		buttonEdit = createButtonAction("Edit", KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));
+		buttonReset = createButtonAction("Reset", KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0));
+		buttonRefresh = createButtonAction("Refresh", KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+		buttonCancel = createButtonAction("Cancel", KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+		buttonOk = createButtonAction("Ok", KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
 		//	
-		v_ConfirmPanel.add(f_New, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+		confirmPanel.add(buttonNew, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
 				,GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
-		v_ConfirmPanel.add(f_Reset, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
+		confirmPanel.add(buttonEdit, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
 				,GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
-		v_ConfirmPanel.add(f_Refresh, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0
+		confirmPanel.add(buttonReset, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0
 				,GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
-		v_ConfirmPanel.add(f_Ok, new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0
+		confirmPanel.add(buttonRefresh, new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0
 				,GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
-		v_ConfirmPanel.add(f_Cancel, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0
+		confirmPanel.add(buttonOk, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
+		confirmPanel.add(buttonCancel, new GridBagConstraints(5, 0, 1, 1, 0.0, 0.0
 				,GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 		
 		//	Add To Main Panel
-		v_MainPanel.add(v_ParameterPanel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+		mainPanel.add(parameterPanel, new GridBagConstraints(0, 0, 1, 1, 1, 1
 				,GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
-		v_MainPanel.add(v_CenterScroll, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+		mainPanel.add(centerScroll, new GridBagConstraints(0, 1, 1, 1, 1, 1
 				,GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 5), 0, 0));
-		v_MainPanel.add(v_ConfirmPanel, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+		mainPanel.add(confirmPanel, new GridBagConstraints(0, 2, 1, 1, 1, 1
 				,GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 5), 0, 0));
+		mainPanel.add(statusBar, new GridBagConstraints(0, 3, 1, 1, 1, 1
+				,GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 5), 0, 0));
+
 		//	Add Main Panel to Content
-		getContentPane().add(v_MainPanel);
-		//	Visible New
-		f_New.setVisible(false);
+		getContentPane().add(mainPanel, new GridBagConstraints(0, 0, 1, 1, 1, 1
+				,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+
+	//	Visible New and Edit
+		buttonNew.setVisible(false);
+		buttonEdit.setVisible(false);
+		// Enable Button Edit
+		buttonEdit.setEnabled(false);
+		//	Add Listener
+		posTable.addMouseListener(this);
+		posTable.addKeyListener(this);
+	}
+	
+	/**
+	 * Add Listener
+	 * @param listener
+	 * @return void
+	 */
+	public void addOptionListener(POSQueryListener listener) {
+		this.listener = listener;
+	}
+	
+	/**
+	 * Fire Ok Action
+	 */
+	public void setOkAction() {
+		close();
+		//	Fire
+		if(listener != null) {
+			listener.okAction(this);
+		}
+	}
+	
+	/**
+	 * Fire Cancel Action
+	 */
+	public void setCancelAction() {
+		//	Fire
+		if(listener != null) {
+			listener.cancelAction(this);
+		}
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		log.info(e.getActionCommand());
-		if (f_New.equals(e.getSource())) {
+		logger.info(e.getActionCommand());
+		if (buttonNew.equals(e.getSource())) {
 			newAction();
 			dispose();
 			return;
-		} if (f_Refresh.equals(e.getSource())) {
-			refresh();
+		}if (buttonEdit.equals(e.getSource())) {
+			editAction();
+			dispose();
 			return;
-		} else if (f_Reset.equals(e.getSource())) {
+		} if (buttonRefresh.equals(e.getSource())) {
+			if(posTable == null)
+				return;
+			//	Refresh
+			refresh();
+			posTable.requestFocus();
+			return;
+		} else if (buttonReset.equals(e.getSource())) {
 			reset();
 			return;
-		} else if(f_Cancel.equals(e.getSource())) {
+		} else if(buttonCancel.equals(e.getSource())) {
 			cancel();
-		} else if (f_Ok.equals(e.getSource())) {
+			setCancelAction();
+		} else if (buttonOk.equals(e.getSource())) {
 			select();
-			close();
+			setOkAction();
 		} else if(e.getSource() instanceof POSTextField
 				|| e.getSource() instanceof CCheckBox) {
+			if(posTable == null)
+				return;
+			//	Refresh
 			refresh();
 		}
 	}
 	
 	@Override
 	public void vetoableChange (PropertyChangeEvent e) {
-		log.info(e.getPropertyName());
+		logger.info(e.getPropertyName());
 		if(e.getSource() instanceof VDate
 				|| e.getSource() instanceof VNumber
 				|| e.getSource() instanceof CComboBox){
+			if(posTable == null)
+				return;
+			//	Refresh
 			refresh();
 		}
 	}
@@ -189,7 +269,8 @@ public abstract class POSQuery extends CDialog
 	 * @return void
 	 */
 	protected void addNewAction() {
-		f_New.setVisible(true);
+		buttonNew.setVisible(true);
+		buttonEdit.setVisible(true);
 	}
 	
 	/**
@@ -243,13 +324,21 @@ public abstract class POSQuery extends CDialog
 		
 	}
 	
+	/**
+	 * For Edit action
+	 * @return void
+	 */
+	protected void editAction() {
+		
+	}
+	
 	@Override
 	public void dispose() {
 		removeAll();
-		v_ParameterPanel = null;
-		v_CenterScroll = null;
-		v_ConfirmPanel = null;
-		m_table = null;
+		parameterPanel = null;
+		centerScroll = null;
+		confirmPanel = null;
+		posTable = null;
 		super.dispose();
 	}
 
@@ -258,12 +347,12 @@ public abstract class POSQuery extends CDialog
 	 */
 	public POSQuery (VPOS posPanel) {
 		super(EnvPOS.getWindow(posPanel.getWindowNo()), true);
-		v_POSPanel = posPanel;
-		m_ctx = posPanel.getCtx();
+		this.posPanel = posPanel;
+		ctx = posPanel.getCtx();
 		initMainPanel();
 		init();
 		pack();
-		setLocationByPlatform(true);
+		AEnvPOS.positionCenterScreen(this);
 	}	//	PosQuery
 
 	/**
@@ -272,7 +361,7 @@ public abstract class POSQuery extends CDialog
 	 */
 	public void mouseClicked(MouseEvent e) {
 		//  Single click with selected row => exit
-		if (e.getClickCount() > 0 && m_table.getSelectedRow() != -1) {
+		if (e.getClickCount() > 1 && posTable.getSelectedRow() != -1) {
 			select();
 			close();
 		}
@@ -292,9 +381,14 @@ public abstract class POSQuery extends CDialog
 	public void mousePressed (MouseEvent e) {
 		//	Add support search Business Partner
 		//  Single click with selected row => exit
-		if (e.getClickCount() > 0 
-				&& m_table.getSelectedRow() != -1)	{
+		if(posTable.getSelectedRow() != -1)
+			buttonEdit.setEnabled(true);
+		
+		if (e.getClickCount() > 1 
+				&& posTable.getSelectedRow() != -1)	{
+			
 			select();
+			setOkAction();
 		}
 	}
 	
@@ -304,21 +398,22 @@ public abstract class POSQuery extends CDialog
 	}
 
 	/**
-	 * 	Table selection changed
-	 *	@param e event
-	 */
-	public void valueChanged (ListSelectionEvent e) {
-		if (e.getValueIsAdjusting())
-			return;
-		select();
-	}	//	valueChanged
-
-	/**
 	 * 	Create Action Button
 	 *	@param action action 
 	 *	@return button
 	 */
 	protected CButton createButtonAction(String action, KeyStroke accelerator) {
+		String acceleratorText = "";
+		if (action != null && accelerator != null) {
+			int modifiers = accelerator.getModifiers();
+			if (modifiers >= 0) {
+				acceleratorText = "(" + KeyEvent.getKeyModifiersText(modifiers);
+				//acceleratorText += "+";
+			}
+			acceleratorText += KeyEvent.getKeyText(accelerator.getKeyCode());
+			addStatusBarInfo(action + acceleratorText + ")");
+		}
+
 		AppsAction act = new AppsAction(action, accelerator, false);
 		act.setDelegate(this);
 		CButton button = (CButton)act.getButton();
@@ -328,4 +423,47 @@ public abstract class POSQuery extends CDialog
 		button.setFocusable(false);
 		return button;
 	}	//	getButtonAction
+	
+	/**
+	 * Show View
+	 * @return void
+	 */
+	public void showView() {
+		SwingUtilities.invokeLater(
+				new Runnable() { 
+					public void run() { 
+						setVisible(true);
+					} 
+				} 
+		);
+	}
+
+	public void addStatusBarInfo(String info)
+	{
+		statusBarInfo = statusBarInfo + " " + info + " ";
+		statusBar.setStatusLine(statusBarInfo);
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if(	posTable.equals(e.getSource()) &&
+			KeyEvent.VK_ENTER == e.getKeyCode() )
+		{
+			select();
+			close();
+			//	Fire
+			if (listener != null) {
+				listener.okAction(this);
+			}
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+	}
 }

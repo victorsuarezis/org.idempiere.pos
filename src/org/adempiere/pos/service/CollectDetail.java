@@ -20,7 +20,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import org.compiere.model.MDocType;
+import org.compiere.model.MInvoice;
+import org.compiere.model.MLookup;
+import org.compiere.model.MLookupFactory;
 import org.compiere.model.X_C_Payment;
+import org.compiere.util.DisplayType;
 import org.compiere.util.Env;
 import org.compiere.util.Language;
 import org.compiere.util.ValueNamePair;
@@ -115,7 +120,7 @@ public class CollectDetail {
 			String m_A_State, String m_A_Street, String m_A_Zip,
 			String m_A_Country, String m_A_EMail, String m_A_Ident_DL,
 			String m_A_Ident_SSN, String m_RoutingNo) {
-		return new CollectDetail(X_C_Payment.TENDERTYPE_CreditCard, m_PayAmt, null, 0, null, 
+		return new CollectDetail(X_C_Payment.TENDERTYPE_CreditCard, m_PayAmt, null, 0, null,
 				m_CreditCardExpMM, m_CreditCardExpYY, m_CreditCardNumber, m_CreditCardType, 
 				m_CreditCardVV, m_A_Name, m_A_City, m_A_State, m_A_Street, m_A_Zip, m_A_Country, 
 				m_A_EMail, m_A_Ident_DL, m_A_Ident_SSN, m_RoutingNo);
@@ -156,6 +161,7 @@ public class CollectDetail {
 	protected CollectDetail(String m_TenderType, BigDecimal m_PayAmt) {
 		this.m_TenderType = m_TenderType;
 		this.m_PayAmt = m_PayAmt;
+		setInitPayAmt(m_PayAmt);
 		m_CreditCardType = X_C_Payment.CREDITCARDTYPE_MasterCard;
 	}
 	
@@ -181,6 +187,8 @@ public class CollectDetail {
 	private String 		m_TenderType;
 	/**	Payment Amount					*/
 	private BigDecimal	m_PayAmt;
+	/**	Initial Payment Amount					*/
+	private BigDecimal	m_InitPayAmt;
 	/**	Reference No					*/
 	private String 		m_ReferenceNo;
 	/**	Bank							*/
@@ -218,6 +226,10 @@ public class CollectDetail {
 	private String 		m_A_Ident_SSN;
 	/**	Bank Routing No					*/
 	private String		m_RoutingNo;
+	/**	Invoice Credit Note				*/
+	private MInvoice	m_CreditMemo;
+	/**	ID Credit Invoice				*/
+	private int			m_C_Invoice_ID;
 	
 	/**
 	 * Get Months for Credit Card
@@ -552,6 +564,96 @@ public class CollectDetail {
 	public void setRoutingNo(String m_RoutingNo) {
 		this.m_RoutingNo = m_RoutingNo;
 	}
+	
+	public int getC_Invoice_ID() {
+		return m_C_Invoice_ID;
+	}
+
+	public void setC_Invoice_ID(int m_C_Invoice_ID) {
+		this.m_C_Invoice_ID = m_C_Invoice_ID;
+	}
+	
+	public BigDecimal getOpenAmtCreditMemo() {
+		BigDecimal m_PayAmt = Env.ZERO ;
+		if(m_C_Invoice_ID == 0)
+			return m_PayAmt;
+		
+		m_CreditMemo = MInvoice.get(Env.getCtx(), m_C_Invoice_ID);
+		MDocType dt = MDocType.get(m_CreditMemo.getCtx(), m_CreditMemo.getC_DocType_ID());
+		
+		m_PayAmt = m_CreditMemo.getOpenAmt();
+		if (MDocType.DOCBASETYPE_APInvoice.equals(dt.getDocBaseType())
+			|| MDocType.DOCBASETYPE_ARCreditMemo.equals(dt.getDocBaseType()) )
+			m_PayAmt = m_PayAmt.negate();
+		if(m_PayAmt.compareTo(getPayAmt())> 0) {
+			m_PayAmt = getPayAmt();
+		}
+		
+		return m_PayAmt;
+	}
+	
+
+	/**
+	 * Initial Pay Amount
+	 * @return
+	 * @return BigDecimal
+	 */
+	public BigDecimal getInitPayAmt() {
+		return m_InitPayAmt;
+	}
+
+	/**
+	 * Initial Pay Amount set
+	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param m_InitPayAmt
+	 * @return void
+	 */
+	public void setInitPayAmt(BigDecimal m_InitPayAmt) {
+		this.m_InitPayAmt = m_InitPayAmt;
+	}
+	
+	/**
+	 * Get Credit Memo 
+	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_C_BPartner_ID
+	 * @return
+	 * @return MLookup
+	 */
+	protected MLookup getCreditMemoLockup(int p_C_BPartner_ID) {
+		MLookup lookup = null ;
+		//
+		int AD_Column_ID = 12349; //	RV_OpenItem C_Invoice_ID
+		//	Where Clause
+		String whereClause = "IsPaid='N' and Processed='Y' and C_BPartner_ID= " + p_C_BPartner_ID 
+				+ " and exists ( select 1 from C_DocType C_DocType where C_DocType.DocBaseType ='ARC' "
+				+ "	and C_Invoice.C_DocTypeTarget_ID = C_DocType.C_DocType_ID)";
+		try {
+			lookup = MLookupFactory.get(Env.getCtx(), 0, AD_Column_ID, DisplayType.TableDir, Env.getLanguage(Env.getCtx()), 
+					MInvoice.COLUMNNAME_C_Invoice_ID, 0, false, whereClause);
+			
+		} catch (Exception e) {
+		}
+		//
+		return lookup;
+	}
+	/**
+	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return m_CreditMemo
+	 */
+	public MInvoice getM_InvCreditMemo() {
+		return m_CreditMemo;
+	}
+
+	/**
+	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param m_CreditMemo
+	 * @return void
+	 */
+	public void setCreditMemo(MInvoice m_CreditMemo) {
+		this.m_CreditMemo = m_CreditMemo;
+	}
+
 
 	@Override
 	public String toString() {

@@ -164,4 +164,14 @@ public class MPOS extends org.idempiere.model.X_C_POS
 	public String toString() {
 		return super.getName();
 		}
+	
+	public static List<MPOS> getByOrganization(Properties ctx,int   orgId , String trxName)
+	{
+		return new Query(ctx , Table_Name , "AD_Org_ID = ?" , trxName )
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(orgId)
+				.setOrderBy(COLUMNNAME_Name)
+				.list();
+	}
 }	//	MPOS

@@ -34,15 +34,14 @@ import java.math.BigDecimal;
 import java.util.Locale;
 import java.util.Properties;
 
-import javax.swing.BorderFactory;
 import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
 
-import org.adempiere.plaf.AdempierePLAF;
 import org.adempiere.pos.service.CollectDetail;
-import org.adempiere.pos.service.I_POSPanel;
+import org.adempiere.pos.service.POSPanelInterface;
+import org.compiere.apps.ADialog;
 import org.compiere.apps.AppsAction;
-//import org.compiere.grid.ed.VComboBox;
+import org.compiere.grid.ed.VComboBox;
 import org.compiere.grid.ed.VComboBoxPOS;
 import org.compiere.grid.ed.VDate;
 import org.compiere.grid.ed.VLookupPOS;
@@ -51,6 +50,7 @@ import org.compiere.model.MLookup;
 import org.compiere.model.MLookupFactory;
 import org.compiere.model.X_C_Payment;
 import org.compiere.swing.CButton;
+import org.compiere.swing.CLabel;
 import org.compiere.swing.CPanel;
 import org.compiere.util.CLogger;
 import org.compiere.util.DisplayType;
@@ -61,76 +61,82 @@ import org.compiere.util.Msg;
 /**
  * @author Mario Calderon, mario.calderon@westfalia-it.com, Systemhaus Westfalia, http://www.westfalia-it.com
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+ * @author Victor Perez <victor.perez@e-evolution.com>,  eEvolution http://www.e-evolution.com
  *
  */
 public class VCollectDetail extends CollectDetail
-	implements VetoableChangeListener, ActionListener, KeyListener, I_POSPanel {
+	implements VetoableChangeListener, ActionListener, KeyListener, POSPanelInterface {
+	
+	/**
+	 * Standard Constructor
+	 * @param collect
+	 * @param tenderType
+	 * @param m_PayAmt
+	 */
+	public VCollectDetail(VCollect parentCollect, String tenderType, BigDecimal payAmt) {
+		super(tenderType, payAmt);
+		ctx = Env.getCtx();
+		this.parentCollect = parentCollect;
+		keyboard = parentCollect.getKeyboard();
+		init();
+	}
 	
 	/**	Panels				*/
-	private CPanel 			v_MainPanel;
-	private CPanel 			v_StandardPanel;
-	private TitledBorder 	v_TitleBorder;
+	private CPanel 			mainPanel;
+	private CPanel 			standardPanel;
+	private TitledBorder 	titleBorder;
 	private GridBagLayout 	layout;
-	private CButton			bMinus;
+	private CButton 		buttonMinus;
 	
 	/**	Check				*/
-	private CPanel 			v_CheckPanel;
-	private POSTextField 	fCheckNo;
-	private POSTextField 	fCheckRoutingNo;
-	private VDate 			fCheckDate;
+	private CPanel 			checkPanel;
+	private POSTextField 	fieldCheckNo;
+	private POSTextField 	fieldCheckRoutingNo;
+	private VDate 			fieldCheckDate;
 	
 	/**	Debit Card			*/
-	private CPanel 			v_DebitPanel;
-	private POSTextField 	fDebitRoutingNo;
-	private POSTextField 	fDebitCVC;
-	private POSTextField 	fDebitCountry;
+	private CPanel 			debitPanel;
+	private POSTextField 	fieldDebitRoutingNo;
+	private POSTextField 	fieldDebitCVC;
+	private POSTextField 	fieldDebitCountry;
 	
 	/**	Credit Card			*/
-	private CPanel 			v_CreditPanel;
-	private VLookupPOS 		fCreditCardType;
-	private POSTextField 	fCreditCardNumber;
-	private POSTextField 	fA_Name;
-	private VComboBoxPOS 		fCreditCardExpMM;
-	private VComboBoxPOS 		fCreditCardExpYY;
-	private POSTextField 	fCreditCardVV;
+	private CPanel 			creditPanel;
+	private VLookupPOS 		fieldCreditCardType;
+	private POSTextField 	fieldCreditCardNumber;
+	private POSTextField 	fieldName;
+	private VComboBoxPOS 		fieldCreditCardExpMM;
+	private VComboBoxPOS		fieldCreditCardExpYY;
+	private POSTextField 	fieldCreditCardVV;
+	
+	/**	Credit Note			*/
+	private CPanel 			creditMemoPanel;
+	private VLookupPOS 		fieldCreditMemo;
+	private CLabel			labelCreditMemo;
 	
 	/**	Generic Values		*/
-	private Properties 		p_ctx;
-	private VLookupPOS 		fTenderType;
-	private VNumber 		fPayAmt;
-	private VCollect 		v_Parent;
+	private Properties 		ctx;
+	private VLookupPOS		fieldTenderType;
+	private VNumber 		fieldPayAmt;
+	private VCollect 		parentCollect;
 	
 	/**	Keyboard to use		*/
-	private POSKeyboard keyboard;
+	private POSKeyboard 	keyboard;
 	/**	Default Font		*/
-	private Font 			font = AdempierePLAF.getFont_Field().deriveFont(Font.BOLD, 18);
+	private Font 			font; //= AdempierePLAF.getFont_Field().deriveFont(Font.BOLD, 12);
 	/**	Log					*/
 	private CLogger 		log = CLogger.getCLogger(VCollect.class);
 	/**	Default Width		*/
 	private final int		FIELD_WIDTH 	= 200;
 	/**	Default Height		*/
-	private final int		FIELD_HEIGHT 	= 50;
-	
-	/**
-	 * Standard Constructor
-	 * @param p_VCollect
-	 * @param p_TenderType
-	 * @param m_PayAmt
-	 */
-	public VCollectDetail(VCollect p_VCollect, String p_TenderType, BigDecimal m_PayAmt) {
-		super(p_TenderType, m_PayAmt);
-		p_ctx = Env.getCtx();
-		v_Parent = p_VCollect;
-		keyboard = v_Parent.getKeyboard();
-		init();
-	}
+	private final int		FIELD_HEIGHT 	= 25;
 	
 	/**
 	 * Get Main Panel
 	 * @return CPanel
 	 */
 	public CPanel getPanel() {
-		return v_MainPanel;
+		return mainPanel;
 	}
 	
 	/**
@@ -138,33 +144,33 @@ public class VCollectDetail extends CollectDetail
 	 * @return void
 	 */
 	private void loadStandardPanel() {
-		v_StandardPanel = new CPanel(layout);
+		standardPanel = new CPanel(layout);
 		//	For Tender Type
-		int AD_Column_ID = 8416;        //  C_Payment_v.TenderType
-		MLookup lookup = MLookupFactory.get(Env.getCtx(), 0, 0, AD_Column_ID, DisplayType.List);
-		fTenderType = new VLookupPOS("TenderType", true, false, true, lookup);
-		((VComboBoxPOS)fTenderType.getCombo()).setRenderer(new POSLookupCellRenderer(font));
-		fTenderType.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
-		((VComboBoxPOS)fTenderType.getCombo()).setFont(font);
-		fTenderType.addVetoableChangeListener(this);
+		int columnId = 8416;        //  C_Payment_v.TenderType
+		MLookup lookup = MLookupFactory.get(Env.getCtx(), 0, 0, columnId, DisplayType.List);
+		fieldTenderType = new VLookupPOS("TenderType", true, false, true, lookup);
+//		((VComboBoxPOS) fieldTenderType.getCombo()).setRenderer(new POSLookupListCellRenderer(font));
+		fieldTenderType.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
+		((VComboBoxPOS) fieldTenderType.getCombo()).setFont(font);
+		fieldTenderType.addVetoableChangeListener(this);
 		//	For Amount
-		fPayAmt = new VNumber("PayAmt", true, false, true, DisplayType.Amount, "");
-		fPayAmt.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
-		fPayAmt.setFont(font);
-		fPayAmt.setValue(Env.ZERO);
-		fPayAmt.addVetoableChangeListener(this);
-		fPayAmt.addKeyListener(this);
+		fieldPayAmt = new VNumber("PayAmt", true, false, true, DisplayType.Amount, "");
+		fieldPayAmt.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
+		fieldPayAmt.setFont(font);
+		fieldPayAmt.setValue(Env.ZERO);
+		fieldPayAmt.addVetoableChangeListener(this);
+		fieldPayAmt.addKeyListener(this);
 		//	Button
-		AppsAction act = new AppsAction("Minus", KeyStroke.getKeyStroke(KeyEvent.VK_F2, Event.F2), false);
-		act.setDelegate(this);
-		bMinus = (CButton)act.getButton();
-		bMinus.setPreferredSize(new Dimension(FIELD_HEIGHT, FIELD_HEIGHT));
-		bMinus.setFocusable(false);
+		AppsAction action = new AppsAction("Minus", KeyStroke.getKeyStroke(KeyEvent.VK_F2, Event.F2), false);
+		action.setDelegate(this);
+		buttonMinus = (CButton)action.getButton();
+		buttonMinus.setPreferredSize(new Dimension(FIELD_HEIGHT, FIELD_HEIGHT));
+		buttonMinus.setFocusable(false);
 		//	Add Tender Type
-		v_StandardPanel.add(fTenderType,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));
-		v_StandardPanel.add(fPayAmt,  new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));
+		standardPanel.add(fieldTenderType,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
+		standardPanel.add(fieldPayAmt,  new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
 	}
 	
 	/**
@@ -173,44 +179,44 @@ public class VCollectDetail extends CollectDetail
 	 */
 	private void loadCheckPanel() {
 		//	Instance Panel
-		v_CheckPanel = new CPanel(layout);
+		checkPanel = new CPanel(layout);
 		//	For Check No
-		String m_CheckNo = Msg.translate(p_ctx, "CheckNo");
-		fCheckNo = new POSTextField(m_CheckNo, keyboard);
-		fCheckNo.setPlaceholder(m_CheckNo);
-		fCheckNo.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
-		fCheckNo.setFont(font);
-		fCheckNo.addKeyListener(this);
-		fCheckNo.addActionListener(this);
+		String m_CheckNo = Msg.translate(ctx, "CheckNo");
+		fieldCheckNo = new POSTextField(m_CheckNo, keyboard);
+		fieldCheckNo.setPlaceholder(m_CheckNo);
+		fieldCheckNo.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
+		fieldCheckNo.setFont(font);
+		fieldCheckNo.addKeyListener(this);
+		fieldCheckNo.addActionListener(this);
 		// For Check Route No
-		String m_RoutingNo = Msg.translate(p_ctx, "RoutingNo");
-		fCheckRoutingNo = new POSTextField(m_RoutingNo, keyboard);
-		fCheckRoutingNo.setPlaceholder(m_RoutingNo);
-		fCheckRoutingNo.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
-		fCheckRoutingNo.setFont(font);
-		fCheckRoutingNo.addKeyListener(this);
-		fCheckRoutingNo.addActionListener(this);
+		String m_RoutingNo = Msg.translate(ctx, "RoutingNo");
+		fieldCheckRoutingNo = new POSTextField(m_RoutingNo, keyboard);
+		fieldCheckRoutingNo.setPlaceholder(m_RoutingNo);
+		fieldCheckRoutingNo.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
+		fieldCheckRoutingNo.setFont(font);
+		fieldCheckRoutingNo.addKeyListener(this);
+		fieldCheckRoutingNo.addActionListener(this);
 		//	For Check Date
-		String langName = Env.getAD_Language(p_ctx);
-		Language language = Language.getLanguage(langName);
+		String languageName = Env.getAD_Language(ctx);
+		Language language = Language.getLanguage(languageName);
 		Language.setLoginLanguage(language);
 		//	Locale
-		Locale loc = language.getLocale();
-		Locale.setDefault(loc);
-		fCheckDate = new VDate(DisplayType.Date);
-		fCheckDate.setFormat();	
-		fCheckDate.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
-		fCheckDate.setFont(font);
-		fCheckDate.addActionListener(this);
+		Locale locale = language.getLocale();
+		Locale.setDefault(locale);
+		fieldCheckDate = new VDate(DisplayType.Date);
+		fieldCheckDate.setFormat();
+		fieldCheckDate.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
+		fieldCheckDate.setFont(font);
+		fieldCheckDate.addActionListener(this);
 		//	Add To Panel
-		v_CheckPanel.add(fCheckRoutingNo,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));
-		v_CheckPanel.add(fCheckNo,  new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));
-		v_CheckPanel.add(fCheckDate,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));
+		checkPanel.add(fieldCheckRoutingNo,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
+		checkPanel.add(fieldCheckNo,  new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
+		checkPanel.add(fieldCheckDate,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
 		//	Default visible false
-		v_CheckPanel.setVisible(false);
+		checkPanel.setVisible(false);
 	}
 	
 	/**
@@ -218,40 +224,40 @@ public class VCollectDetail extends CollectDetail
 	 * @return void
 	 */
 	private void loadDebitPanel() {
-		v_DebitPanel = new CPanel(layout);
+		debitPanel = new CPanel(layout);
 		//	For Route
-		String m_RoutingNo = Msg.translate(p_ctx, "RoutingNo");
-		fDebitRoutingNo = new POSTextField(m_RoutingNo, keyboard);
-		fDebitRoutingNo.setPlaceholder(m_RoutingNo);
-		fDebitRoutingNo.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
-		fDebitRoutingNo.setFont(font);
-		fDebitRoutingNo.addKeyListener(this);
-		fDebitRoutingNo.addActionListener(this);
+		String routingNo = Msg.translate(ctx, "RoutingNo");
+		fieldDebitRoutingNo = new POSTextField(routingNo, keyboard);
+		fieldDebitRoutingNo.setPlaceholder(routingNo);
+		fieldDebitRoutingNo.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
+		fieldDebitRoutingNo.setFont(font);
+		fieldDebitRoutingNo.addKeyListener(this);
+		fieldDebitRoutingNo.addActionListener(this);
 		//	For CVC
-		String m_R_CVV2Match = Msg.translate(p_ctx, "R_CVV2Match");
-		fDebitCVC = new POSTextField(m_R_CVV2Match, keyboard);
-		fDebitCVC.setPlaceholder(m_R_CVV2Match);
-		fDebitCVC.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
-		fDebitCVC.setFont(font);
-		fDebitCVC.addKeyListener(this);
-		fDebitCVC.addActionListener(this);
+		String cvv2Match = Msg.translate(ctx, "R_CVV2Match");
+		fieldDebitCVC = new POSTextField(cvv2Match, keyboard);
+		fieldDebitCVC.setPlaceholder(cvv2Match);
+		fieldDebitCVC.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
+		fieldDebitCVC.setFont(font);
+		fieldDebitCVC.addKeyListener(this);
+		fieldDebitCVC.addActionListener(this);
 		//	For Country
-		String m_A_Country = Msg.translate(p_ctx, "A_Country");
-		fDebitCountry = new POSTextField(m_A_Country, keyboard);
-		fDebitCountry.setPlaceholder(m_A_Country);
-		fDebitCountry.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
-		fDebitCountry.setFont(font);
-		fDebitCountry.addKeyListener(this);
-		fDebitCountry.addActionListener(this);
+		String country = Msg.translate(ctx, "A_Country");
+		fieldDebitCountry = new POSTextField(country, keyboard);
+		fieldDebitCountry.setPlaceholder(country);
+		fieldDebitCountry.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
+		fieldDebitCountry.setFont(font);
+		fieldDebitCountry.addKeyListener(this);
+		fieldDebitCountry.addActionListener(this);
 		//	Add to Panel
-		v_DebitPanel.add(fDebitRoutingNo,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));
-		v_DebitPanel.add(fDebitCountry,  new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));		
-		v_DebitPanel.add(fDebitCVC,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));
+		debitPanel.add(fieldDebitRoutingNo,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
+		debitPanel.add(fieldDebitCountry,  new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
+		debitPanel.add(fieldDebitCVC,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
 		//	Default visible false
-		v_DebitPanel.setVisible(false);
+		debitPanel.setVisible(false);
 	}
 	
 	/**
@@ -259,76 +265,106 @@ public class VCollectDetail extends CollectDetail
 	 * @return void
 	 */
 	private void loadCreditPanel() {
-		v_CreditPanel = new CPanel(layout);
+		creditPanel = new CPanel(layout);
 		//	For Credit Card
-		int AD_Column_ID = 8374; 			//C_Payment_v.CreditCardType
-		MLookup cardlookup = MLookupFactory.get(Env.getCtx(), 0, 0, AD_Column_ID, DisplayType.List);
-		fCreditCardType = new VLookupPOS("CreditCardType", true, false, true, cardlookup);
+		int columnId = 8374; 			//C_Payment_v.CreditCardType
+		MLookup cardlookup = MLookupFactory.get(Env.getCtx(), 0, 0, columnId, DisplayType.List);
+		fieldCreditCardType = new VLookupPOS("CreditCardType", true, false, true, cardlookup);
 		//	For Credit Card Type
-		((VComboBoxPOS)fCreditCardType.getCombo()).setRenderer(new POSLookupCellRenderer(font));
-		fCreditCardType.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
-		((VComboBoxPOS)fCreditCardType.getCombo()).setFont(font);
-		fCreditCardType.addVetoableChangeListener(this);
+//		((VComboBox) fieldCreditCardType.getCombo()).setRenderer(new POSLookupListCellRenderer(font));
+		fieldCreditCardType.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
+		((VComboBox) fieldCreditCardType.getCombo()).setFont(font);
+		fieldCreditCardType.addVetoableChangeListener(this);
 		//	For Months
 		//	For Card No
-		String m_CreditCardNumber = Msg.translate(p_ctx, "CreditCardNumber");
-		fCreditCardNumber = new POSTextField(m_CreditCardNumber, v_Parent.getKeyboard());
-		fCreditCardNumber.setPlaceholder(m_CreditCardNumber);
-		fCreditCardNumber.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
-		fCreditCardNumber.setFont(font);
-		fCreditCardNumber.addKeyListener(this);
-		fCreditCardNumber.addActionListener(this);
+		String creditCardNumber = Msg.translate(ctx, "CreditCardNumber");
+		fieldCreditCardNumber = new POSTextField(creditCardNumber, parentCollect.getKeyboard());
+		fieldCreditCardNumber.setPlaceholder(creditCardNumber);
+		fieldCreditCardNumber.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
+		fieldCreditCardNumber.setFont(font);
+		fieldCreditCardNumber.addKeyListener(this);
+		fieldCreditCardNumber.addActionListener(this);
 		//	For Card Name
-		String m_A_Name = Msg.translate(p_ctx, "A_Name");
-		fA_Name = new POSTextField(m_A_Name, v_Parent.getKeyboard());
-		fA_Name.setPlaceholder(m_A_Name);
-		fA_Name.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
-		fA_Name.setFont(font);
-		fA_Name.addKeyListener(this);
-		fA_Name.addActionListener(this);
+		String name = Msg.translate(ctx, "A_Name");
+		fieldName = new POSTextField(name, parentCollect.getKeyboard());
+		fieldName.setPlaceholder(name);
+		fieldName.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
+		fieldName.setFont(font);
+		fieldName.addKeyListener(this);
+		fieldName.addActionListener(this);
 		//	For Card Month
-		fCreditCardExpMM = new VComboBoxPOS(getCCMonths());
-		fCreditCardExpMM.setName("CreditCardExpMM");
-		fCreditCardExpMM.setValue(-1);
-		fCreditCardExpMM.setMandatory(true);
-		fCreditCardExpMM.setPreferredSize(new Dimension(FIELD_WIDTH / 2, FIELD_HEIGHT));
-		fCreditCardExpMM.setRenderer(new POSLookupCellRenderer(font));
-		fCreditCardExpMM.setFont(font);
-		fCreditCardExpMM.addActionListener(this);
+		fieldCreditCardExpMM = new VComboBoxPOS(getCCMonths());
+		fieldCreditCardExpMM.setName("CreditCardExpMM");
+		fieldCreditCardExpMM.setValue(-1);
+		fieldCreditCardExpMM.setMandatory(true);
+		fieldCreditCardExpMM.setPreferredSize(new Dimension(FIELD_WIDTH / 2, FIELD_HEIGHT));
+//		fieldCreditCardExpMM.setRenderer(new POSLookupListCellRenderer(font));
+		fieldCreditCardExpMM.setFont(font);
+		fieldCreditCardExpMM.addActionListener(this);
 		//	For Card Year
-		fCreditCardExpYY = new VComboBoxPOS(getCCYears());
-		fCreditCardExpYY.setName("CreditCardExpYY");
-		fCreditCardExpYY.setValue(-1);
-		fCreditCardExpYY.setMandatory(true);
-		fCreditCardExpYY.setPreferredSize(new Dimension(FIELD_WIDTH / 2, FIELD_HEIGHT));
-		fCreditCardExpYY.setRenderer(new POSLookupCellRenderer(font));
-		fCreditCardExpYY.setFont(font);
-		fCreditCardExpYY.addActionListener(this);
+		fieldCreditCardExpYY = new VComboBoxPOS(getCCYears());
+		fieldCreditCardExpYY.setName("CreditCardExpYY");
+		fieldCreditCardExpYY.setValue(-1);
+		fieldCreditCardExpYY.setMandatory(true);
+		fieldCreditCardExpYY.setPreferredSize(new Dimension(FIELD_WIDTH / 2, FIELD_HEIGHT));
+//		fieldCreditCardExpYY.setRenderer(new POSLookupListCellRenderer(font));
+		fieldCreditCardExpYY.setFont(font);
+		fieldCreditCardExpYY.addActionListener(this);
 		//	For Card VV
-		String m_CreditCardVV = Msg.translate(p_ctx, "CreditCardVV");
+		String creditCardVV = Msg.translate(ctx, "CreditCardVV");
 		
 		
-		fCreditCardVV = new POSTextField(m_CreditCardVV, v_Parent.getKeyboard());
-		fCreditCardVV.setPlaceholder(m_CreditCardVV);
-		fCreditCardVV.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
-		fCreditCardVV.setFont(font);
-		fCreditCardVV.addKeyListener(this);
-		fCreditCardVV.addActionListener(this);
+		fieldCreditCardVV = new POSTextField(creditCardVV, parentCollect.getKeyboard());
+		fieldCreditCardVV.setPlaceholder(creditCardVV);
+		fieldCreditCardVV.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
+		fieldCreditCardVV.setFont(font);
+		fieldCreditCardVV.addKeyListener(this);
+		fieldCreditCardVV.addActionListener(this);
 		//	Add to Panel
-		v_CreditPanel.add(fCreditCardType,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));
-		v_CreditPanel.add(fA_Name,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));
-		v_CreditPanel.add(fCreditCardNumber,  new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));	
-		v_CreditPanel.add(fCreditCardVV,  new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));	
-		v_CreditPanel.add(fCreditCardExpMM,  new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
-				,GridBagConstraints.WEST, GridBagConstraints.NORTH, new Insets(1, 0, 5, 5), 0, 0));
-		v_CreditPanel.add(fCreditCardExpYY,  new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(1, 0, 5, 5), 0, 0));
+		creditPanel.add(fieldCreditCardType,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
+		creditPanel.add(fieldName,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
+		creditPanel.add(fieldCreditCardNumber,  new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
+		creditPanel.add(fieldCreditCardVV,  new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
+		creditPanel.add(fieldCreditCardExpMM,  new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.WEST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
+		creditPanel.add(fieldCreditCardExpYY,  new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
 		//	Default visible false
-		v_CreditPanel.setVisible(false);
+		creditPanel.setVisible(false);
+	}
+	
+	/**
+	 * Load for Credit Memo
+	 * @return void
+	 */
+	private void loadCreditMemo() {
+		creditMemoPanel = new CPanel(layout);
+		//	Add label credit note
+		labelCreditMemo = new CLabel(Msg.translate(Env.getCtx(), "CreditMemo") + ":");
+		labelCreditMemo.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
+
+		//	For Credit Memo
+		MLookup cardNotelookup = getCreditMemoLockup(parentCollect.getC_BPartner_ID());
+		fieldCreditMemo = new VLookupPOS("CreditMemo", false, false, true, cardNotelookup);
+		//	For Credit Memo Type
+//		((VComboBox)fieldCreditMemo.getCombo()).setRenderer(new POSLookupListCellRenderer(font));
+		fieldCreditMemo.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
+//		((VComboBox)fieldCreditMemo.getCombo()).setFont(font);
+		fieldCreditMemo.addVetoableChangeListener(this);
+		
+		//	Add to Panel
+		creditMemoPanel.add(labelCreditMemo,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
+		
+		creditMemoPanel.add(fieldCreditMemo,  new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
+		
+		//	Default visible false
+		creditMemoPanel.setVisible(false);
 	}
 	
 	/**
@@ -336,12 +372,14 @@ public class VCollectDetail extends CollectDetail
 	 * @return void
 	 */
 	private void init() {
+		font = parentCollect.getPOS().getFont();
 		layout = new GridBagLayout();
-		v_MainPanel = new CPanel(layout);
+		mainPanel = new CPanel(layout);
 		//	Set Border
-		v_TitleBorder = BorderFactory.createTitledBorder("Credit Card");
-		v_TitleBorder.setTitleColor(AdempierePLAF.getTextColor_Label());
-		v_MainPanel.setBorder(v_TitleBorder);
+		//titleBorder = BorderFactory.createTitledBorder("Credit Card");
+		//titleBorder.setTitleColor(AdempierePLAF.getTextColor_Label());
+		//mainPanel.setBorder(titleBorder);
+
 		//	Load Standard Panel
 		loadStandardPanel();
 		//	Load Check Panel
@@ -350,26 +388,32 @@ public class VCollectDetail extends CollectDetail
 		loadDebitPanel();
 		//	Load Credit Panel
 		loadCreditPanel();
+		//	Load Credit Note Panel
+		loadCreditMemo();
+		
 		//	Add to Main Panel
-		v_MainPanel.add(v_StandardPanel,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));
+		mainPanel.add(standardPanel,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
 		
-		v_MainPanel.add(bMinus,  new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));
+		mainPanel.add(buttonMinus,  new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
 		
-		v_MainPanel.add(v_CheckPanel,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));
+		mainPanel.add(checkPanel,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
 		
-		v_MainPanel.add(v_DebitPanel,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));
+		mainPanel.add(debitPanel,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
 		
-		v_MainPanel.add(v_CreditPanel,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(5, 0, 5, 5), 0, 0));
+		mainPanel.add(creditPanel,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
+
+		mainPanel.add(creditMemoPanel,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.EAST, GridBagConstraints.NORTH, new Insets(2, 0, 2, 2), 0, 0));
+		
 		//	Change View
-		fTenderType.setValue(getTenderType());
-		fCreditCardType.setValue(getCreditCardType());
-		fPayAmt.setValue(getPayAmt());
-		//	
+		fieldTenderType.setValue(getTenderType());
+		fieldCreditCardType.setValue(getCreditCardType());
+		fieldPayAmt.setValue(getPayAmt());
 		changeViewPanel();
 	}
 			
@@ -378,46 +422,66 @@ public class VCollectDetail extends CollectDetail
 			throws PropertyVetoException {
 		String name = e.getPropertyName();
 		Object value = e.getNewValue();
+		String tenderType = getTenderType();
 		log.config(name + " = " + value);
 		//	Verify Event
-		if(e.getSource().equals(fPayAmt)){
-			setPayAmt((BigDecimal) fPayAmt.getValue());
-			v_Parent.refreshPanel();
+		if(e.getSource().equals(fieldPayAmt)){
+			BigDecimal payAmt = (BigDecimal) fieldPayAmt.getValue();
+			if(tenderType.equals("M")
+					&& payAmt.compareTo(getOpenAmtCreditMemo()) > 0
+					&& fieldCreditMemo.getValue() != null) {
+				ADialog.warn(1, null,  Msg.parseTranslation(ctx, "POS.MaxAmountAllowed")+":"+getOpenAmtCreditMemo());
+				fieldPayAmt.setValue(getOpenAmtCreditMemo());
+			}
+			setPayAmt((BigDecimal) fieldPayAmt.getValue());
+			parentCollect.refreshPanel();
 		} else if(name.equals("TenderType")) {
 			String m_TenderType = ((String)(value != null? value: 0));
 			setTenderType(m_TenderType);
 			changeViewPanel();
+			fieldPayAmt.setValue(getInitPayAmt());
+			setPayAmt((BigDecimal) fieldPayAmt.getValue());
+			parentCollect.refreshPanel();
 		} else if(name.equals("CreditCardType")) {
-			setCreditCardType((String) fCreditCardType.getValue());
+			setCreditCardType((String) fieldCreditCardType.getValue());
+		} else if(name.equals("CreditMemo")) {
+			int invoiceId = ((Integer)(value != null? value: 0)).intValue();
+			setC_Invoice_ID(invoiceId);
+			setPayAmt(getInitPayAmt());
+			parentCollect.refreshPanel();
+			fieldPayAmt.setValue(getOpenAmtCreditMemo());
+			
+			setPayAmt((BigDecimal) fieldPayAmt.getValue());
+			parentCollect.refreshPanel();
 		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(bMinus)) {
-			v_Parent.removeCollectDetail(this);
-		} else if(e.getSource().equals(fCreditCardExpMM)) {
-			setCreditCardExpMM((String)fCreditCardExpMM.getValue());
-		} else if(e.getSource().equals(fCreditCardExpYY)) {
-			setCreditCardExpYY((String)fCreditCardExpYY.getValue());
-		} else if(e.getSource().equals(fCheckNo)) {	//	For Check
-			setReferenceNo(fCheckNo.getText());
-		} else if(e.getSource().equals(fCheckRoutingNo)) {
-			setRoutingNo(fCheckRoutingNo.getText());
-		} else if(e.getSource().equals(fCheckDate)) {
-			setDateTrx(fCheckDate.getTimestamp());
-		} else if(e.getSource().equals(fDebitRoutingNo)) {	//	For Debit Card
-			setRoutingNo(fDebitRoutingNo.getText());
-		} else if(e.getSource().equals(fDebitCVC)) {
+		if(e.getSource().equals(buttonMinus)) {
+			parentCollect.removeCollectDetail(this);
+		} else if(e.getSource().equals(fieldCreditCardExpMM)) {
+			setCreditCardExpMM((String) fieldCreditCardExpMM.getValue());
+		} else if(e.getSource().equals(fieldCreditCardExpYY)) {
+			setCreditCardExpYY((String) fieldCreditCardExpYY.getValue());
+		} else if(e.getSource().equals(fieldCheckNo)) {	//	For Check
+			setReferenceNo(fieldCheckNo.getText());
+		} else if(e.getSource().equals(fieldCheckRoutingNo)) {
+			setRoutingNo(fieldCheckRoutingNo.getText());
+		} else if(e.getSource().equals(fieldCheckDate)) {
+			setDateTrx(fieldCheckDate.getTimestamp());
+		} else if(e.getSource().equals(fieldDebitRoutingNo)) {	//	For Debit Card
+			setRoutingNo(fieldDebitRoutingNo.getText());
+		} else if(e.getSource().equals(fieldDebitCVC)) {
 			//	TODO add support to controller to be define
-		} else if(e.getSource().equals(fDebitCountry)) {
-			setA_Country(fDebitCountry.getText());
-		} else if(e.getSource().equals(fCreditCardNumber)) {	//	For Credit Card
-			setCreditCardNumber(fCreditCardNumber.getText());
-		} else if(e.getSource().equals(fA_Name)) {
-			setA_Name(fA_Name.getText());
-		} else if(e.getSource().equals(fCreditCardVV)) {
-			setCreditCardVV(fCreditCardVV.getText());
+		} else if(e.getSource().equals(fieldDebitCountry)) {
+			setA_Country(fieldDebitCountry.getText());
+		} else if(e.getSource().equals(fieldCreditCardNumber)) {	//	For Credit Card
+			setCreditCardNumber(fieldCreditCardNumber.getText());
+		} else if(e.getSource().equals(fieldName)) {
+			setA_Name(fieldName.getText());
+		} else if(e.getSource().equals(fieldCreditCardVV)) {
+			setCreditCardVV(fieldCreditCardVV.getText());
 		}
 	}
 
@@ -432,34 +496,34 @@ public class VCollectDetail extends CollectDetail
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
+	public void keyReleased(KeyEvent keyEvent) {
 		//	Validate for just L=letter digit
-		if(!Character.isLetterOrDigit(e.getKeyChar())) {
-			e.consume();
+		if(!Character.isLetterOrDigit(keyEvent.getKeyChar())) {
+			keyEvent.consume();
 		}
-		if(e.getSource().equals(fCheckNo)) {	//	For Check
-			setReferenceNo(fCheckNo.getText());
-		} else if(e.getSource().equals(fCheckRoutingNo)) {
-			setRoutingNo(fCheckRoutingNo.getText());
-		} else if(e.getSource().equals(fCheckDate)) {
-			setDateTrx(fCheckDate.getTimestamp());
-		} else if(e.getSource().equals(fDebitRoutingNo)) {	//	For Debit Card
-			setRoutingNo(fDebitRoutingNo.getText());
-		} else if(e.getSource().equals(fDebitCVC)) {
-			setCreditCardVV(fDebitCVC.getText());
-		} else if(e.getSource().equals(fDebitCountry)) {
-			setA_Country(fDebitCountry.getText());
-		} else if(e.getSource().equals(fCreditCardNumber)) {	//	For Credit Card
-			setCreditCardNumber(fCreditCardNumber.getText());
-		} else if(e.getSource().equals(fA_Name)) {
-			setA_Name(fA_Name.getText());
-		} else if(e.getSource().equals(fCreditCardVV)) {
-			setCreditCardVV(fCreditCardVV.getText());
+		if(keyEvent.getSource().equals(fieldCheckNo)) {	//	For Check
+			setReferenceNo(fieldCheckNo.getText());
+		} else if(keyEvent.getSource().equals(fieldCheckRoutingNo)) {
+			setRoutingNo(fieldCheckRoutingNo.getText());
+		} else if(keyEvent.getSource().equals(fieldCheckDate)) {
+			setDateTrx(fieldCheckDate.getTimestamp());
+		} else if(keyEvent.getSource().equals(fieldDebitRoutingNo)) {	//	For Debit Card
+			setRoutingNo(fieldDebitRoutingNo.getText());
+		} else if(keyEvent.getSource().equals(fieldDebitCVC)) {
+			setCreditCardVV(fieldDebitCVC.getText());
+		} else if(keyEvent.getSource().equals(fieldDebitCountry)) {
+			setA_Country(fieldDebitCountry.getText());
+		} else if(keyEvent.getSource().equals(fieldCreditCardNumber)) {	//	For Credit Card
+			setCreditCardNumber(fieldCreditCardNumber.getText());
+		} else if(keyEvent.getSource().equals(fieldName)) {
+			setA_Name(fieldName.getText());
+		} else if(keyEvent.getSource().equals(fieldCreditCardVV)) {
+			setCreditCardVV(fieldCreditCardVV.getText());
 		} else {	//	TODO Add validation with name, it is resolved when implement KeyListener in VNumber
-			setPayAmt((BigDecimal) fPayAmt.getValue());
+			setPayAmt((BigDecimal) fieldPayAmt.getValue());
 		}
 		//	Refresh
-		v_Parent.refreshPanel();
+		parentCollect.refreshPanel();
 	}
 
 	@Override
@@ -468,7 +532,7 @@ public class VCollectDetail extends CollectDetail
 	}
 
 	@Override
-	public String validatePanel() {
+	public String validatePayment() {
 		
 		return null;
 	}
@@ -478,35 +542,52 @@ public class VCollectDetail extends CollectDetail
 	 * @return void
 	 */
 	public void requestFocusInPayAmt() {
-		fPayAmt.requestFocus();
+		fieldPayAmt.requestFocus();
 	}
 	
 	@Override
 	public void changeViewPanel() {
-		String p_TenderType = getTenderType();
+		String tenderType = getTenderType();
 		//	Valid Null
-		if(p_TenderType == null)
+		if(tenderType == null)
 			return;
 		//	Change Title
-		String m_DisplayTenderType = fTenderType.getDisplay();
-		v_TitleBorder.setTitle(m_DisplayTenderType);
+		String m_DisplayTenderType = fieldTenderType.getDisplay();
+		//titleBorder.setTitle(m_DisplayTenderType);
 		//	
-		if(p_TenderType.equals(X_C_Payment.TENDERTYPE_Check)){
-			v_CheckPanel.setVisible(true);
-			v_DebitPanel.setVisible(false);
-			v_CreditPanel.setVisible(false);
-		} else if(p_TenderType.equals(X_C_Payment.TENDERTYPE_DirectDebit)){
-			v_CheckPanel.setVisible(false);
-			v_DebitPanel.setVisible(true);
-			v_CreditPanel.setVisible(false);
-		} else if(p_TenderType.equals(X_C_Payment.TENDERTYPE_CreditCard)){
-			v_CheckPanel.setVisible(false);
-			v_DebitPanel.setVisible(false);
-			v_CreditPanel.setVisible(true);
+		if(tenderType.equals(X_C_Payment.TENDERTYPE_Check)){
+			checkPanel.setVisible(true);
+			debitPanel.setVisible(false);
+			creditPanel.setVisible(false);
+			creditMemoPanel.setVisible(false);
+		} else if(tenderType.equals(X_C_Payment.TENDERTYPE_DirectDebit)){
+			checkPanel.setVisible(false);
+			debitPanel.setVisible(true);
+			creditPanel.setVisible(false);
+			creditMemoPanel.setVisible(false);
+		} else if(tenderType.equals(X_C_Payment.TENDERTYPE_CreditCard)){
+			checkPanel.setVisible(false);
+			debitPanel.setVisible(false);
+			creditPanel.setVisible(true);
+			creditMemoPanel.setVisible(false);
+		} else if(tenderType.equals("M")){
+			checkPanel.setVisible(false);
+			debitPanel.setVisible(false);
+			creditPanel.setVisible(false);
+			creditMemoPanel.setVisible(true);
 		} else {
-			v_CheckPanel.setVisible(false);
-			v_DebitPanel.setVisible(false);
-			v_CreditPanel.setVisible(false);
+			checkPanel.setVisible(false);
+			debitPanel.setVisible(false);
+			creditPanel.setVisible(false);
+			creditMemoPanel.setVisible(false);
 		}
+	}
+	
+	@Override
+	public void moveUp() {
+	}
+
+	@Override
+	public void moveDown() {
 	}
 }

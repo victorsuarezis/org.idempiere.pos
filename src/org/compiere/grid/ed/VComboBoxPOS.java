@@ -6,6 +6,11 @@ import org.adempiere.pos.POSLookupCellRenderer;
 
 public class VComboBoxPOS extends VComboBox {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2978871655755824102L;
+
 	public VComboBoxPOS() {
 		// TODO Auto-generated constructor stub
 	}

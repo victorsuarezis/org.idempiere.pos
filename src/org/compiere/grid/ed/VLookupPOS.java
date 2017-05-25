@@ -53,7 +53,7 @@ import javax.swing.SwingUtilities;
 
 import org.adempiere.client.InfoManager;
 import org.compiere.apps.ADialog;
-import org.compiere.apps.AEnv;
+import org.compiere.apps.AEnvPOS;
 import org.compiere.apps.AWindow;
 import org.compiere.apps.FieldRecordInfo;
 import org.compiere.apps.search.Info;
@@ -78,6 +78,7 @@ import org.compiere.util.Ini;
 import org.compiere.util.Msg;
 import org.compiere.util.NamePair;
 import org.compiere.util.ValueNamePair;
+import org.idempiere.util.EnvPOS;
 
 /**
  *  Lookup Visual Field.
@@ -915,7 +916,7 @@ public class VLookupPOS extends JComponent
 		if (m_lookup == null)
 			return;		//	leave button disabled
 		m_text.requestFocus();						//  closes other editors
-		Frame frame = AEnv.getFrame(this);
+		Frame frame = EnvPOS.getFrame(this);
 
 		/**
 		 *  Three return options:
@@ -1350,7 +1351,7 @@ public class VLookupPOS extends JComponent
 	 */
 	private void actionBPartner (boolean newRecord)
 	{
-		VBPartner vbp = new VBPartner (AEnv.getFrame(this), m_lookup.getWindowNo());
+		VBPartner vbp = new VBPartner (EnvPOS.getFrame(this), m_lookup.getWindowNo());
 		int BPartner_ID = 0;
 		//  if update, get current value
 		if (!newRecord)
@@ -1387,7 +1388,7 @@ public class VLookupPOS extends JComponent
 			MBPartnerLocation bpl = new MBPartnerLocation(Env.getCtx(), BPLocation_ID, null);
 			MLocation location= new MLocation(Env.getCtx(), bpl.getC_Location_ID(), null);
 
-			VLocationDialog ld = new VLocationDialog(AEnv.getFrame(this), Msg.getMsg(Env.getCtx(), "Location"), location);
+			VLocationDialog ld = new VLocationDialog(EnvPOS.getFrame(this), Msg.getMsg(Env.getCtx(), "Location"), location);
 			ld.setVisible(true);
 		}
 	}	//	actionBPartner
@@ -1505,14 +1506,14 @@ public class VLookupPOS extends JComponent
 		}
 		else
 		{
-			AEnv.addToWindowManager(frame);
+			AEnvPOS.addToWindowManager(frame);
 			if (Ini.isPropertyBool(Ini.P_OPEN_WINDOW_MAXIMIZED))
 			{
-				AEnv.showMaximized(frame);
+				AEnvPOS.showMaximized(frame);
 			}
 			else
 			{
-				AEnv.showCenterScreen(frame);
+				AEnvPOS.showCenterScreen(frame);
 			}
 		}
 			//  async window - not able to get feedback

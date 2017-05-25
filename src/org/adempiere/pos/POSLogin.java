@@ -26,7 +26,6 @@ import org.compiere.swing.CButton;
 import org.compiere.swing.CDialog;
 import org.compiere.swing.CLabel;
 import org.compiere.swing.CPanel;
-import org.compiere.util.Env;
 import org.compiere.util.Login;
 import org.compiere.util.Msg;
 import org.idempiere.util.EnvPOS;

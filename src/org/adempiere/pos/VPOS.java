@@ -18,6 +18,9 @@
 package org.adempiere.pos;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -27,9 +30,9 @@ import java.awt.MouseInfo;
 import java.awt.PointerInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
+import java.awt.event.WindowEvent;
+import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -37,112 +40,188 @@ import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.Timer;
 
+import org.adempiere.exceptions.AdempiereException;
 import org.adempiere.plaf.AdempierePLAF;
 import org.adempiere.pos.service.CPOS;
-import org.adempiere.pos.service.I_POSPanel;
+import org.adempiere.pos.service.POSPanelInterface;
+import org.adempiere.pos.service.POSScalesPanelInterface;
 import org.compiere.apps.ADialog;
+import org.compiere.apps.StatusBar;
+import org.compiere.apps.Waiting;
 import org.compiere.apps.form.FormFrame;
+import org.compiere.apps.form.FormFramePOS;
 import org.compiere.apps.form.FormPanel;
-import org.compiere.pos.PosKeyboardFocusManager;
+import org.idempiere.model.MPOS;
+import org.compiere.model.MPOSKey;
 import org.compiere.swing.CFrame;
 import org.compiere.swing.CPanel;
 import org.compiere.util.CLogger;
-import org.compiere.util.DisplayType;
 import org.compiere.util.Env;
 import org.compiere.util.Msg;
-import org.idempiere.model.MPOS;
 
 /**
  * @author Mario Calderon, mario.calderon@westfalia-it.com, Systemhaus Westfalia, http://www.westfalia-it.com
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
- *
+ * @author victor.perez@e-evolution.com , http://www.e-evolution.com
  */
-public class VPOS extends CPOS implements FormPanel, I_POSPanel {
+public class VPOS extends CPOS implements FormPanel, POSPanelInterface, POSScalesPanelInterface {
 	
-	/**	Window No					*/
-	private int         					m_WindowNo;
 	/**	FormFrame					*/
-	private CFrame 							m_frame;
+	private CFrame 							frame;
 	/**	Main Panel					*/
-	private CPanel							v_MainPane;
+	private CPanel 							mainPanel;
 	/**	Divider Pane				*/
-	private JSplitPane						v_DividerPane;
+	private JSplitPane 						dividerPane;
 	/**	Left Panel					*/
-	private CPanel							v_LeftPanel;
+	private CPanel 							leftPanel;
 	/** Order Panel					*/
-	private POSActionPanel 					v_ActionPanel;
+	private POSActionPanel 					actionPanel;
+	/** Quantity panel 				*/
+	private POSQuantityPanel 				quantityPanel;
+	/**	Info Product Panel			*/
+	private POSInfoProduct 					infoProductPanel;
 	/** Current Line				*/
-	private POSOrderLinePanel 				v_OrderLinePanel;
+	private POSOrderLinePanel 				orderLinePanel;
 	/** Function Keys				*/
-	private POSProductPanel 				v_ProductKeysPanel;
-	/**	POS Message					*/
-	private String 							m_POSMsg;
+	private POSDocumentPanel 				documentPanel;
+	/** Status Bar 					*/
+	private StatusBar 						statusBar;
 	/**	Timer for logout			*/
 	private Timer 							logoutTimer;
+	/**	Timer for User Pin			*/
+	private Timer 							userPinTimer;
+	/** Find Product Timer 			*/
+	private Timer 							scalesTimer;
+	/** Is Correct User Pin			*/
+	private Boolean							isCorrectUserPin;
+	/** User Pin Listener 			*/
+	private POSUserPinListener 				userPinListener;
+	/** Electronic Scales			*/
+	private POSScalesListener 				scalesListener;
 	/** Keyoard Focus Manager		*/
-	private PosKeyboardFocusManager 		m_focusMgr;
+	private POSKeyboardFocusManager 		focusManager;
 	/**	Focus Management			*/
 	private KeyboardFocusManager 			originalKeyboardFocusManager;
 	/**	Key Boards					*/
 	private HashMap<Integer, POSKeyboard> 	keyboards = new HashMap<Integer, POSKeyboard>();
 	
 	/**	Logger						*/
-	private CLogger							log = CLogger.getCLogger(getClass());
-	/**	Format						*/
-	private DecimalFormat					m_Format;
+	private CLogger 						logger = CLogger.getCLogger(getClass());
 	/**	Font						*/
 	private Font 							font;
+	/**	Plain Font					*/
+	private Font 							plainFont;
+	/**	Big Font					*/
+	private Font 							bigFont;
+	/**	Big Plain Font				*/
+	private Font 							bigPlainFont;
 	/**	Default Height				*/
-	public int								m_FieldHeight;
+	public int 								fieldHeight;
 	/**	Plus Button Size			*/
-	private int								m_ButtonSize;
-	
+	private int 							buttonSize;
+	/** Status bar info				*/
+	private String 							statusBarInfo;
+	/**	Waiting Dialog				*/
+	private Waiting 						waiting;
 	
 	/**
 	 * *** Constructor ***
 	 */
 	public VPOS() {
 		super();
-		v_MainPane = new CPanel(new BorderLayout());
-		v_DividerPane = new JSplitPane();
-		v_DividerPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-		v_DividerPane.setBorder(BorderFactory.createEtchedBorder());
-		v_DividerPane.setContinuousLayout(true);
-		v_DividerPane.setDividerLocation(700);
-		v_MainPane.add(v_DividerPane, BorderLayout.CENTER);
-		originalKeyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-		m_focusMgr = new PosKeyboardFocusManager();
-		KeyboardFocusManager.setCurrentKeyboardFocusManager(m_focusMgr);
-		//	Set Border
-		font = AdempierePLAF.getFont_Field().deriveFont(Font.BOLD, 18);
-		m_Format = DisplayType.getNumberFormat(DisplayType.Amount);
-		m_FieldHeight = 50;
-		m_ButtonSize = 50;
+
+		mainPanel = new CPanel(new BorderLayout());
+		mainPanel.setFocusCycleRoot(true);
+		dividerPane = new JSplitPane();
+		dividerPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		dividerPane.setBorder(BorderFactory.createEtchedBorder());
+		dividerPane.setContinuousLayout(true);
+		dividerPane.setDividerLocation(dividerPane.getSize().width
+				- dividerPane.getInsets().right
+				- dividerPane.getDividerSize()
+				- 100);
+		mainPanel.add(dividerPane, BorderLayout.CENTER);
+		statusBar = new StatusBar();
+		statusBarInfo = "";
+		mainPanel.add(statusBar , BorderLayout.SOUTH);
+		//	
+		font = AdempierePLAF.getFont_Field().deriveFont(Font.BOLD, 12);
+		plainFont = AdempierePLAF.getFont_Field().deriveFont(Font.PLAIN, 12);
+		bigFont = AdempierePLAF.getFont_Field().deriveFont(Font.BOLD, 14);
+		bigPlainFont = AdempierePLAF.getFont_Field().deriveFont(Font.PLAIN, 14);
+		
+		fieldHeight = 45;
+		buttonSize = 45;
 		
 	}
+	
+	/**
+	 * Load keyboard
+	 */
+	private void settingKeyboardFocusManager() {
+		if (isVirtualKeyboard()) {
+			originalKeyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+			focusManager = new POSKeyboardFocusManager();
+			KeyboardFocusManager.setCurrentKeyboardFocusManager(focusManager);
+		}
+	}
 
-	@Override
-	public void init(int WindowNo, FormFrame frame) {
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		frame.setResizable(true);
+	public void init(int WindowNo, FormFramePOS frame) {
+		this.frame = frame.getCFrame();
+		this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.frame.setResizable(true);
 		//	
-		log.info("init - SalesRep_ID=" + Env.getAD_User_ID(getCtx()));
-		m_WindowNo = WindowNo;
-		m_frame = frame;
+		logger.info("init - SalesRep_ID=" + Env.getAD_User_ID(getCtx()));
+		setWindowNo(WindowNo);
 		frame.setJMenuBar(null);
+
+		if (!loadPOS())
+		{
+
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					CFrame closeFrame = frame.getCFrame();
+					closeFrame.dispatchEvent(new WindowEvent(closeFrame, WindowEvent.WINDOW_CLOSING));
+					dispose();
+				}
+			});
+			return;
+		}
+
+
+		userPinListener = new POSUserPinListener(this);
+		//Delay 5 seconds by default
+		userPinTimer = new javax.swing.Timer((getPINEntryTimeout() + 10)  * 1000, userPinListener);
+		if (isPresentElectronicScales()) {
+			scalesListener = new POSScalesListener(this);
+			scalesTimer = new javax.swing.Timer(400, scalesListener);
+		}
+		isCorrectUserPin = null;
+
+		settingKeyboardFocusManager();
+
+		if (getM_POS() == null) {
+			if (this.frame != null)
+				this.frame.dispose();
+			return;
+		}
 		//
 		try {
 			if (!dynInit()) {
 				dispose();
-				m_frame.setTitle(Msg.parseTranslation(Env.getCtx(), m_POSMsg));
 				return;
 			}
 			//	Add to frame
-			frame.getContentPane().add(v_MainPane, BorderLayout.CENTER);
-		} catch(Exception e) {
-			log.log(Level.SEVERE, "init", e);
+			frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		}
-		log.config( "PosPanel.init - " + v_MainPane.getPreferredSize());
+		catch (AdempierePOSException exception)
+		{
+			ADialog.error(getWindowNo(), this.frame, exception.getLocalizedMessage());
+			dispose();
+			return;
+		}
+
+		logger.config( "PosPanel.init - " + mainPanel.getPreferredSize());
 		
 		if (getAutoLogoutDelay() > 0 && logoutTimer == null) {
 			logoutTimer = new javax.swing.Timer(1000,
@@ -151,27 +230,44 @@ public class VPOS extends CPOS implements FormPanel, I_POSPanel {
 				PointerInfo pi = null;
 				long lastMouseMove  = System.currentTimeMillis();
 				long lastKeyboardEvent = System.currentTimeMillis();
-				public void actionPerformed(ActionEvent e) {
-					long now = e.getWhen();
-					PointerInfo newPi = MouseInfo.getPointerInfo();
-					// mouse moved
-					if ( newPi != null && pi != null 
-							&& !pi.getLocation().equals(newPi.getLocation())) {
-						lastMouseMove = now;
-					}
-					pi = newPi;
+				public void actionPerformed(ActionEvent actionEvent) {
+					try {
+						long now = actionEvent.getWhen();
+						PointerInfo newPi = MouseInfo.getPointerInfo();
+						// mouse moved
+						if (newPi != null && pi != null
+								&& !pi.getLocation().equals(newPi.getLocation())) {
+							lastMouseMove = now;
+						}
+						pi = newPi;
 
-					lastKeyboardEvent = m_focusMgr.getLastWhen();
+						if (isVirtualKeyboard())
+							lastKeyboardEvent = focusManager.getLastWhen();
+						else
+							lastKeyboardEvent = 0;
 
-					if (getAutoLogoutDelay()*1000 
-							< now - Math.max(lastKeyboardEvent, lastMouseMove)) {
-					//	new PosLogin(this);
+						if (getAutoLogoutDelay() * 1000
+								< now - Math.max(lastKeyboardEvent, lastMouseMove)) {
+							//	new PosLogin(this);
+						}
+					} catch (AdempiereException exception) {
+							ADialog.error(getWindowNo(), getFrame() , exception.getLocalizedMessage());
 					}
 				}
 			});
 			logoutTimer.start();
 		}
-		m_focusMgr.start();
+		if (isVirtualKeyboard())
+			focusManager.start();
+	}
+	
+	/**
+	 * Get Main Frame
+	 * @return
+	 * @return CFrame
+	 */
+	public CFrame getFrame() {
+		return frame;
 	}
 	
 	/**
@@ -184,12 +280,30 @@ public class VPOS extends CPOS implements FormPanel, I_POSPanel {
 	}
 	
 	/**
-	 * Get number format
+	 * Get Plain font
 	 * @return
-	 * @return DecimalFormat
+	 * @return Font
 	 */
-	public DecimalFormat getNumberFormat() {
-		return m_Format;
+	public Font getPlainFont() {
+		return plainFont;
+	}
+	
+	/**
+	 * Get big Font
+	 * @return
+	 * @return Font
+	 */
+	public Font getBigFont() {
+		return bigFont;
+	}
+	
+	/**
+	 * Get Big Plain
+	 * @return
+	 * @return Font
+	 */
+	public Font getBigPlainFont() {
+		return bigPlainFont;
 	}
 	
 	/**
@@ -197,8 +311,8 @@ public class VPOS extends CPOS implements FormPanel, I_POSPanel {
 	 * @return
 	 * @return int
 	 */
-	public int getFieldLenght() {
-		return m_FieldHeight;
+	public int getFieldHeight() {
+		return fieldHeight;
 	}
 	
 	/**
@@ -207,31 +321,52 @@ public class VPOS extends CPOS implements FormPanel, I_POSPanel {
 	 * @return int
 	 */
 	public int getButtonSize() {
-		return m_ButtonSize;
+		return buttonSize;
 	}
 	
+	/**
+	 * Resize Split Panel
+	 * @return void
+	 */
+	public void autoSize() {
+		dividerPane.setResizeWeight(.6d);
+	}
+
+	/**
+	 *
+	 * @return
+     */
+	public Dimension getSize() {
+		return java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+	}
+
 	/**
 	 * Load POS
 	 * @return String
 	 */
-	private String loadPOS() {
+	private boolean loadPOS() {
 		int salesRep_ID = Env.getAD_User_ID(getCtx());
-		boolean ok = setPOS(salesRep_ID);
-		if(!ok) {
-			//	Select POS
-			String msg = Msg.getMsg(getCtx(), "SelectPOS");
-			String title = Env.getHeader(getCtx(), m_WindowNo);
-			Object selection = JOptionPane.showInputDialog(m_frame, msg, title, 
-				JOptionPane.QUESTION_MESSAGE, null, getPOSs(salesRep_ID), null);
-			if (selection != null) {
-				setM_POS((MPOS)selection);
-				return validLocator();
-			}
-		} else if(ok) {
-			return null;
+		setPOS(salesRep_ID);
+
+		if(getM_POS() != null) {
+			validLocator();
+			return true;
+		}
+		//	Select POS
+		int orgId = Env.getAD_Org_ID(getCtx());
+		String msg = Msg.getMsg(getCtx(), "SelectPOS");
+		String title = Env.getHeader(getCtx(), getWindowNo());
+		Object selection = JOptionPane.showInputDialog(frame, msg, title,
+				JOptionPane.QUESTION_MESSAGE, null, getPOSByOrganization(orgId).toArray(), null);
+
+		if (selection != null) {
+			setM_POS((MPOS)selection);
+			validLocator();
+		} else {
+			return false;
 		}
 		//	
-		return "@POS.NoPOSForUser@";
+		return true;
 	}
 	
 	/**************************************************************************
@@ -240,24 +375,56 @@ public class VPOS extends CPOS implements FormPanel, I_POSPanel {
 	 * 	The Sub Panels return their position
 	 */
 	private boolean dynInit() {
-		m_POSMsg = loadPOS();
-		if (m_POSMsg != null)
-			return false;
-		m_frame.setTitle("Adempiere POS: " + getPOSName());
+		frame.setTitle("Adempiere POS: " + getPOSName());
 		//	Create Sub Panels
-		v_LeftPanel = new CPanel(new GridBagLayout());
-		v_ActionPanel = new POSActionPanel(this);
-		v_LeftPanel.add(v_ActionPanel, new GridBagConstraints(0, 0, 1, 1, 1, 1
-				,GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+		leftPanel = new CPanel(new GridBagLayout());
+		actionPanel = new POSActionPanel(this);
+		infoProductPanel = new POSInfoProduct(this);
+		quantityPanel = new POSQuantityPanel(this);
+
+		leftPanel.add(actionPanel, new GridBagConstraints(0, 0, 1, 1, 1, 0
+				,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		leftPanel.add(infoProductPanel, new GridBagConstraints(0, 1, 1, 1, 1, 0
+				,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		leftPanel.add(quantityPanel, new GridBagConstraints(0, 2, 1, 1, 1, 0
+				,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0 , 10 , 0), 0, 0));
+
 		//
-		v_OrderLinePanel = new POSOrderLinePanel(this);
-		v_LeftPanel.add(v_OrderLinePanel, new GridBagConstraints(0, 1, 1, 1, 1, 1
-				,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-		v_ProductKeysPanel = new POSProductPanel(this);
-		v_DividerPane.add(v_LeftPanel, JSplitPane.LEFT);
-		v_DividerPane.add(v_ProductKeysPanel, JSplitPane.RIGHT);		
+		orderLinePanel = new POSOrderLinePanel(this);
+		leftPanel.add(orderLinePanel, new GridBagConstraints(0, 4, 1, 1, 1, 1
+				,GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+		documentPanel = new POSDocumentPanel(this);
+		dividerPane.add(leftPanel, JSplitPane.LEFT);
+		dividerPane.add(documentPanel, JSplitPane.RIGHT);
+
+		statusBar.setInfo("");
+		//	Seek to last
+		if(hasRecord())
+			lastRecord();
+		refreshPanel();
 		return true;
 	}	//	dynInit
+	
+	/**
+	 * Add or replace order line
+	 * @param productId
+	 * @param qtyOrdered
+	 * @return void
+	 */
+	public void addOrUpdateLine(int productId, BigDecimal qtyOrdered) throws Exception{
+		//	Create Order if none exists
+		if (!hasOrder()) {
+			newOrder();
+		}
+		//	
+		String lineError = addOrUpdate(productId, qtyOrdered);
+		if (lineError != null) {
+			logger.warning("POS Error " + lineError);
+			ADialog.error(getWindowNo(),
+					mainPanel, Msg.parseTranslation(ctx, lineError));
+		}
+		refreshPanel();
+	}
 
 	/**
 	 * 	Dispose - Free Resources
@@ -268,27 +435,37 @@ public class VPOS extends CPOS implements FormPanel, I_POSPanel {
 		if ( logoutTimer != null )
 			logoutTimer.stop();
 		logoutTimer = null;
-		
-		if (m_focusMgr != null)
-			m_focusMgr.stop();
-		m_focusMgr = null;
-		KeyboardFocusManager.setCurrentKeyboardFocusManager(originalKeyboardFocusManager);
+
+		if ( userPinTimer != null )
+			userPinTimer.stop();
+		userPinTimer = null;
+
+		if ( scalesTimer != null )
+			scalesTimer.stop();
+		scalesTimer = null;
+
+		if (isVirtualKeyboard()) {
+			if (focusManager != null)
+				focusManager.stop();
+			focusManager = null;
+			KeyboardFocusManager.setCurrentKeyboardFocusManager(originalKeyboardFocusManager);
+		}
 		//
-		if (v_ActionPanel != null)
-			v_ActionPanel.dispose();
-		v_ActionPanel = null;
-		if (v_OrderLinePanel != null) {
+		if (actionPanel != null)
+			actionPanel.dispose();
+		actionPanel = null;
+		if (orderLinePanel != null) {
 			// if ( m_order != null )
 			// 	m_order.deleteOrder();
-			v_OrderLinePanel.dispose();
+			orderLinePanel.dispose();
 		}
-		v_OrderLinePanel = null;
-		if (v_ProductKeysPanel != null)
-			v_ProductKeysPanel.dispose();
-		v_ProductKeysPanel = null;
-		if (m_frame != null)
-			m_frame.dispose();
-		m_frame = null;
+		orderLinePanel = null;
+		if (documentPanel != null)
+			documentPanel.dispose();
+		documentPanel = null;
+		if (frame != null)
+			frame.dispose();
+		frame = null;
 	}	//	dispose
 	
 	/**
@@ -297,11 +474,12 @@ public class VPOS extends CPOS implements FormPanel, I_POSPanel {
 	public POSKeyboard getKeyboard(int keyLayoutId) {
 		if ( keyboards.containsKey(keyLayoutId) )
 			return keyboards.get(keyLayoutId);
-		else {
-			POSKeyboard keyboard = new POSKeyboard(v_MainPane, keyLayoutId);
+		else if (keyLayoutId > 0 ){
+			POSKeyboard keyboard = new POSKeyboard(mainPanel, keyLayoutId);
 			keyboards.put(keyLayoutId, keyboard);
 			return keyboard;
 		}
+		return null;
 	}
 	
 	/**
@@ -313,42 +491,46 @@ public class VPOS extends CPOS implements FormPanel, I_POSPanel {
 	}
 	
 	/**
-	 * Get Window Number
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return
-	 * @return int
-	 */
-	public int getWindowNo() {
-		return m_WindowNo;
-	}
-
-	/**
-	 * New Order
-	 * @param p_C_BPartner_ID
-	 * @return void
-	 */
-	public void newOrder(int p_C_BPartner_ID) {
-		boolean isDocType = ADialog.ask(0, v_MainPane, Msg.getMsg(getCtx(), "POS.AlternateDT"));
-		newOrder(isDocType, p_C_BPartner_ID);
-		setC_BPartner_ID(p_C_BPartner_ID);
-	}
-	
-	/**
 	 * New Order
 	 * @return void
 	 */
-	public void newOrder() {
+	public void newOrder() throws Exception{
 		newOrder(0);
+		infoProductPanel.resetValues();
+		quantityPanel.resetPanel();
+		getMainFocus();
 	}
 
 	@Override
 	public void refreshPanel() {
 		//	Reload from DB
 		reloadOrder();
-		v_ActionPanel.refreshPanel();
-		v_ActionPanel.changeViewPanel();
-		v_ProductKeysPanel.refreshPanel();
-		v_OrderLinePanel.refreshPanel();
+		orderLinePanel.refreshPanel();
+		actionPanel.refreshPanel();
+		documentPanel.refreshPanel();
+		if(!hasLines()) {
+			infoProductPanel.resetValues();
+			quantityPanel.resetPanel();
+		}
+		quantityPanel.refreshPanel();
+	}
+	
+	/**
+	 * Refresh Product Info
+	 * @param key
+	 * @return void
+	 */
+	public void refreshProductInfo(MPOSKey key) {
+		infoProductPanel.refreshProduct(key , getQty() , getM_PriceList_ID() , getC_BPartner_ID());
+	}
+	
+	/**
+	 * Refresh Product Info
+	 * @param productId
+	 * @return void
+	 */
+	public void refreshProductInfo(int productId) {
+		infoProductPanel.refreshProduct( productId , getQty() , getM_PriceList_ID() , getC_BPartner_ID());
 	}
 	
 	/**
@@ -357,17 +539,237 @@ public class VPOS extends CPOS implements FormPanel, I_POSPanel {
 	 */
 	public void refreshHeader() {
 		reloadOrder();
-		v_ActionPanel.changeViewPanel();
-		v_ProductKeysPanel.refreshPanel();
+		actionPanel.refreshPanel();
+		documentPanel.refreshPanel();
 	}
 
 	@Override
-	public String validatePanel() {
+	public String validatePayment() {
 		return null;
 	}
 
 	@Override
 	public void changeViewPanel() {
+		quantityPanel.changeViewPanel();
+		orderLinePanel.changeViewPanel();
+	}
+
+	/**
+	 * Update Line Table
+	 */
+	public void updateLineTable() {
+		orderLinePanel.updateLine();
+	}
+	
+	@Override
+	public void moveUp() {
+		orderLinePanel.moveUp();
+	}
+
+	@Override
+	public void moveDown() {
+		orderLinePanel.moveDown();
+	}
+
+	public StatusBar getStatusBar()
+	{
+		return statusBar;
+	}
+
+	public void addStatusBarInfo(String info)
+	{
+		statusBarInfo = statusBarInfo + " " + info + " ";
+		getStatusBar().setStatusLine(statusBarInfo);
+	}
+
+	/**
+	 * return User Pin Listener
+	 * @return
+     */
+	public ActionListener getUserPinListener()
+	{
+		return userPinListener;
+	}
+
+	/**
+	 * return Electronic Scales Listener
+	 * @return
+	 */
+	public POSScalesListener getScalesListener()
+	{
+		return scalesListener;
+	}
+
+	/**
+	 * set the correct user pin
+	 * @param isCorrectUserPin
+     */
+	protected void setIsCorrectUserPin(boolean isCorrectUserPin)
+	{
+		this.isCorrectUserPin = isCorrectUserPin;
+	}
+
+	/**
+	 * Set user PIN based on pin validation
+	 * @param userPin
+     */
+	protected void validateAndSetUserPin(char[] userPin)
+	{
+		if (isCorrectUserPin != null && isCorrectUserPin)
+			return;
+		boolean isValidUserPin = isValidUserPin(userPin);
+		if (isValidUserPin)
+		{
+			userPinTimer.restart();
+			setIsCorrectUserPin(isValidUserPin);
+		}
+	}
+
+	/**
+	 * invalidate user pin
+	 */
+	protected void invalidateUserPin()
+	{
+		this.isCorrectUserPin = null;
+	}
+
+	/**
+	 * Is correct User Pin asynchronous validation
+	 * @return
+     */
+	public boolean isUserPinValid()
+	{
+		if (!isRequiredPIN())
+			return true;
+
+		if (isCorrectUserPin == null)
+			POSUserPinDialog.show(this);
+
+		if (isCorrectUserPin == null || !isCorrectUserPin)
+			throw new AdempiereException("@Supervisor_ID@: @UserPin@ @IsInvalid@.");
+
+		return isCorrectUserPin;
+	}
+
+	public void showCollectPayment()
+	{
+		documentPanel.getCollectPayment().showPanel();
+	}
+
+	public void showScales()
+	{
+		documentPanel.getScalesPanel().showPanel();
+	}
+
+	public void hideScales()
+	{
+		documentPanel.getScalesPanel().hidePanel();
+	}
+
+	public void setScalesMeasure(String measure)
+	{
+		documentPanel.getScalesPanel().setMeasure(measure);
+	}
+
+	public void showKeyboard()
+	{
+		documentPanel.getKeyboard().showPanel();
+	}
+
+	public void hideKeyboard()
+	{
+		documentPanel.getKeyboard().hidePanel();
+	}
+
+	public void disablePOSButtons()
+	{
+		infoProductPanel.resetValues();
+		quantityPanel.resetPanel();
+		actionPanel.resetPanel();
+		orderLinePanel.disableTable();
+	}
+	
+	public void restoreTable() {
+		orderLinePanel.enableTable();
+	}
+
+	public String getProductUOMSymbol()
+	{
+		return infoProductPanel.getUOMSymbol();
+	}
+
+	public Timer getUserPinTimer()
+	{
+		return userPinTimer;
+	}
+
+	public Timer getScalesTimer()
+	{
+		return scalesTimer;
+	}
+
+	public void quantityRequestFocus()
+	{
+		quantityPanel.requestFocus();
+	}
+
+	public void getMainFocus()
+	{
+		actionPanel.getMainFocus();
+	}
+
+	/**
+	 * Set Quantity of Product
+	 * @param qty
+	 */
+	public void setQty(BigDecimal qty) {
+		super.setQty(qty);
+		quantityPanel.setQuantity(getQty());
+	}
+
+	public void updateProductPlaceholder(String name)
+	{
+		actionPanel.updateProductPlaceholder(name);
+	}
+
+	/**
+	 * Show a busy dialog or hide it
+	 * @param busy
+	 */
+	public void setBusy(boolean busy) {
+		if(busy) {
+//			waiting = new Waiting(getFrame(), Msg.parseTranslation(getCtx(), "@Processing@"), false, 5);
+//			waiting.toFront();
+			getFrame().getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		} else {
+//			if(waiting != null) {
+//				waiting.dispose();
+//				waiting = null;
+//			}
+			getFrame().getContentPane().setCursor(Cursor.getDefaultCursor());
+		}
+	}
+
+	/**
+	 * Show a message on busy dialog if it exists
+	 * @param message
+	 */
+	public void setBusyMessage(String message) {
+//		if(waiting != null)
+//			waiting.setText(message);
+	}
+	
+	/**
+	 * Gerify if is busy
+	 * @return
+	 */
+	public boolean isBusy() {
+		return waiting != null;
+	}
+
+	@Override
+	public void init(int WindowNo, FormFrame frame) {
+		// TODO Auto-generated method stub
 		
 	}
 }

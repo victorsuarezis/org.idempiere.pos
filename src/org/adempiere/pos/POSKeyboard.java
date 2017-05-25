@@ -14,7 +14,6 @@
 
 package org.adempiere.pos;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +21,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.HashMap;
@@ -35,7 +36,6 @@ import net.miginfocom.swing.MigLayout;
 import org.compiere.apps.ConfirmPanel;
 import org.compiere.model.MPOSKey;
 import org.compiere.model.MPOSKeyLayout;
-import org.compiere.pos.PosKeyListener;
 import org.compiere.swing.CDialog;
 import org.compiere.swing.CPanel;
 import org.compiere.util.CLogger;
@@ -54,7 +54,7 @@ import org.idempiere.util.EnvPOS;
  *	Adaxa Pty Ltd
  */
 public class POSKeyboard extends CDialog 
-	implements ActionListener, PosKeyListener, KeyListener, FocusListener {
+	implements ActionListener, POSKeyListener, KeyListener, FocusListener, WindowFocusListener {
 	
 	/**
 	 * 
@@ -90,7 +90,7 @@ public class POSKeyboard extends CDialog
 	 * @param posPanel
 	 * @param keyLayoutId
 	 */
-	public POSKeyboard(Container posPanel, int keyLayoutId) {
+	public POSKeyboard(CPanel posPanel, int keyLayoutId) {
 		super(EnvPOS.getFrame(posPanel), true);
 		m_Keylayout = MPOSKeyLayout.get(Env.getCtx(), keyLayoutId);
 		init(keyLayoutId);
@@ -108,7 +108,8 @@ public class POSKeyboard extends CDialog
 		//	Content
 		panel.setLayout(new MigLayout("fill"));
 		
-		if (m_Keylayout.getPOSKeyLayoutType().equals(MPOSKeyLayout.POSKEYLAYOUTTYPE_Numberpad))
+		if (m_Keylayout.getPOSKeyLayoutType() != null &&
+			m_Keylayout.getPOSKeyLayoutType().equals(MPOSKeyLayout.POSKEYLAYOUTTYPE_Numberpad))
 			m_Text.setHorizontalAlignment(JTextField.TRAILING);
 		//	Add Listener
 		m_Text.addKeyListener(this);
@@ -338,5 +339,15 @@ public class POSKeyboard extends CDialog
 	@Override
 	public void focusLost(FocusEvent e) {
 		
+	}
+
+	@Override
+	public void windowGainedFocus(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowLostFocus(WindowEvent e) {
+		processCancelAction();
 	}
 }	//	PosSubBasicKeys

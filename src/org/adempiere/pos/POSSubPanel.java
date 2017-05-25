@@ -17,6 +17,7 @@ package org.adempiere.pos;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Properties;
 
 import javax.swing.KeyStroke;
@@ -25,7 +26,6 @@ import org.compiere.apps.AppsAction;
 import org.compiere.swing.CButton;
 import org.compiere.swing.CPanel;
 import org.compiere.util.Env;
-import org.idempiere.model.MPOS;
 
 /**
  *	POS Sub Panel Base Class.
@@ -52,17 +52,14 @@ public abstract class POSSubPanel extends CPanel
 	public POSSubPanel (VPOS posPanel)
 	{
 		super();
-		v_POSPanel = posPanel;
-		m_pos = posPanel.getM_POS();
+		this.posPanel = posPanel;
 		init();
 	}	//	PosSubPanel
 	
 	/** POS Panel							*/
-	protected VPOS 				v_POSPanel;
-	/**	Underlying POS Model				*/
-	protected MPOS				m_pos;
+	protected VPOS 				posPanel;
 	/** Context								*/
-	protected Properties		m_ctx = Env.getCtx();
+	protected Properties 		ctx = Env.getCtx();
 	
 
 	/** Button Width = 50			*/
@@ -74,15 +71,13 @@ public abstract class POSSubPanel extends CPanel
 	 * 	Initialize
 	 */
 	protected abstract void init();
-	
+
 	/**
 	 * 	Dispose - Free Resources
 	 */
-	public void dispose()
-	{
-		m_pos = null;
+	public void dispose() {
+		//	
 	}	//	dispose
-
 	
 	/**
 	 * 	Create Action Button
@@ -91,13 +86,26 @@ public abstract class POSSubPanel extends CPanel
 	 */
 	protected CButton createButtonAction (String action, KeyStroke accelerator)
 	{
-		AppsAction act = new AppsAction(action, accelerator, false);
+		String acceleratorText = "";
+		if (action != null && accelerator != null) {
+
+			if (accelerator != null) {
+				int modifiers = accelerator.getModifiers();
+				if (modifiers >= 0) {
+					acceleratorText = "(" + KeyEvent.getKeyModifiersText(modifiers);
+					//acceleratorText += "+";
+				}
+				acceleratorText += KeyEvent.getKeyText(accelerator.getKeyCode());
+			}
+			posPanel.addStatusBarInfo(action + acceleratorText + ")");
+		}
+
+		AppsAction act = new AppsAction(action , accelerator , acceleratorText , false);  //AppsAction(action, accelerator, false);
 		act.setDelegate(this);
 		CButton button = (CButton)act.getButton();
 		button.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-		button.setMinimumSize(getPreferredSize());
-		button.setMaximumSize(getPreferredSize());
-		button.setFocusable(false);
+		button.setMinimumSize(new Dimension(WIDTH, HEIGHT));
+		button.setMaximumSize(new Dimension(WIDTH, HEIGHT));
 		return button;
 	}	//	getButtonAction
 	
@@ -113,8 +121,8 @@ public abstract class POSSubPanel extends CPanel
 		CButton button = new CButton(text);
 		button.addActionListener(this);
 		button.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-		button.setMinimumSize(getPreferredSize());
-		button.setMaximumSize(getPreferredSize());
+		button.setMinimumSize(new Dimension(WIDTH, HEIGHT));
+		button.setMaximumSize(new Dimension(WIDTH, HEIGHT));
 		button.setFocusable(false);
 		return button;
 	}	//	getButton
