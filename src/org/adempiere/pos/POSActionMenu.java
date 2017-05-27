@@ -37,7 +37,6 @@ import org.adempiere.pos.service.POSQueryListener;
 import org.compiere.apps.ADialog;
 import org.compiere.apps.AEnvPOS;
 import org.compiere.apps.Waiting;
-import org.compiere.apps.form.FormFramePOS;
 import org.compiere.model.MBPartner;
 import org.compiere.process.ProcessInfo;
 import org.compiere.util.Env;
@@ -224,7 +223,7 @@ public class POSActionMenu implements  ActionListener , POSQueryListener{
             } else if (command.getCommand() == CommandManager.GENERATE_WITHDRAWAL) {
                 Env.setContext(pos.getCtx(), pos.getWindowNo() , "C_POS_ID" , pos.getC_POS_ID());
                 Dimension size = new Dimension(1024, 768);
-                FormFramePOS ff = new FormFramePOS(pos.getWindowNo());
+                FormFrame ff = new FormFrame(pos.getWindowNo());
                 ff.setSize(size);
                 MBrowse browse = new MBrowse(Env.getCtx(), 50056 , null);
                 new VBrowser(ff, true , pos.getWindowNo(), "" , browse , "" , true, "", true);
@@ -233,7 +232,7 @@ public class POSActionMenu implements  ActionListener , POSQueryListener{
             } else if (command.getCommand() == CommandManager.CLOSE_STATEMENT) {
                 Env.setContext(pos.getCtx(), pos.getWindowNo() , "C_POS_ID" , pos.getC_POS_ID());
                 Dimension size = new Dimension(1024, 768);
-                FormFramePOS ff = new FormFramePOS(pos.getWindowNo());
+                FormFrame ff = new FormFrame(pos.getWindowNo());
                 ff.setSize(size);
                 MBrowse browse = new MBrowse(Env.getCtx(), 50057 , null);
                 new VBrowser(ff, true , pos.getWindowNo(), "" , browse , "" , true, "", true);

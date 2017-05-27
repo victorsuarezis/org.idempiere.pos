@@ -26,8 +26,7 @@ import org.compiere.Adempiere;
 import org.compiere.apps.AEnvPOS;
 import org.compiere.apps.AKeyboardFocusManager;
 import org.compiere.apps.ALogin;
-import org.compiere.apps.form.FormFramePOS;
-import org.compiere.apps.form.FormFramePOS2;
+import org.compiere.apps.form.FormFrame;
 import org.compiere.model.MSession;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
@@ -50,7 +49,7 @@ public class POSApplication {
 	public POSApplication() {
 		Adempiere.startup(true);	//	needs to be here for UI
 		Splash splash = Splash.getSplash();
-		final FormFramePOS2 frame = new FormFramePOS2(splash.getGraphicsConfiguration());
+		final FormFrame frame = new FormFrame(splash.getGraphicsConfiguration());
 		//  Focus Traversal
 		KeyboardFocusManager.setCurrentKeyboardFocusManager(AKeyboardFocusManager.get());
 		
@@ -103,7 +102,7 @@ public class POSApplication {
 //		});
 
 		VPOS pos = new VPOS();
-		pos.init(0,(FormFramePOS2) frame);
+		pos.init(0,(frame);
 		frame.pack();
 		splash.dispose();
 		splash = null;	
