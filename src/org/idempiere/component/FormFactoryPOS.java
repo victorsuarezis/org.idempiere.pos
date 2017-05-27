@@ -15,7 +15,6 @@ public class FormFactoryPOS implements IFormFactory {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
 	public FormPanel newFormInstance(String formName) {
 		log.info(formName);
 		FormPanel form = EquinoxExtensionLocator.instance().locate(FormPanel.class, "org.adempiere.pos", formName, null).getExtension();

@@ -49,7 +49,6 @@ import org.compiere.apps.ADialog;
 import org.compiere.apps.StatusBar;
 import org.compiere.apps.Waiting;
 import org.compiere.apps.form.FormFrame;
-import org.compiere.apps.form.FormFramePOS;
 import org.compiere.apps.form.FormPanel;
 import org.idempiere.model.MPOS;
 import org.compiere.model.MPOSKey;
@@ -166,7 +165,8 @@ public class VPOS extends CPOS implements FormPanel, POSPanelInterface, POSScale
 		}
 	}
 
-	public void init(int WindowNo, FormFramePOS frame) {
+	@Override
+	public void init(int WindowNo, FormFrame frame) {
 		this.frame = frame.getCFrame();
 		this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.frame.setResizable(true);
@@ -765,11 +765,5 @@ public class VPOS extends CPOS implements FormPanel, POSPanelInterface, POSScale
 	 */
 	public boolean isBusy() {
 		return waiting != null;
-	}
-
-	@Override
-	public void init(int WindowNo, FormFrame frame) {
-		// TODO Auto-generated method stub
-		
 	}
 }
