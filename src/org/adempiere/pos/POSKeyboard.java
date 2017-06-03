@@ -33,6 +33,7 @@ import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.compiere.apps.AEnv;
 import org.compiere.apps.ConfirmPanel;
 import org.compiere.model.MPOSKey;
 import org.compiere.model.MPOSKeyLayout;
@@ -40,7 +41,6 @@ import org.compiere.swing.CDialog;
 import org.compiere.swing.CPanel;
 import org.compiere.util.CLogger;
 import org.compiere.util.Env;
-import org.idempiere.util.EnvPOS;
 
 
 /**
@@ -91,7 +91,7 @@ public class POSKeyboard extends CDialog
 	 * @param keyLayoutId
 	 */
 	public POSKeyboard(CPanel posPanel, int keyLayoutId) {
-		super(EnvPOS.getFrame(posPanel), true);
+		super(AEnv.getFrame(posPanel), true);
 		m_Keylayout = MPOSKeyLayout.get(Env.getCtx(), keyLayoutId);
 		init(keyLayoutId);
 	}

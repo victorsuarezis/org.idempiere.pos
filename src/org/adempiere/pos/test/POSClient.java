@@ -21,10 +21,10 @@ import java.awt.KeyboardFocusManager;
 import java.util.Properties;
 
 import org.compiere.Adempiere;
-import org.compiere.apps.AEnvPOS;
+import org.compiere.apps.AEnv;
 import org.compiere.apps.AKeyboardFocusManager;
 import org.compiere.apps.ALogin;
-import org.compiere.apps.form.FormFramePOS;
+import org.compiere.apps.form.FormFrame;
 import org.compiere.model.MSession;
 import org.compiere.swing.CFramePOS;
 import org.compiere.util.DB;
@@ -46,7 +46,7 @@ public class POSClient {
 			Properties m_ctx = new Properties();
 			Adempiere.startup(true);	//	needs to be here for UI
 			Splash splash = new  Splash("POS Client");
-			final FormFramePOS frame = new FormFramePOS(new CFramePOS("POS Client"));
+			final FormFrame frame = new FormFrame(new CFramePOS("POS Client"));
 			//  Focus Traversal
 			KeyboardFocusManager.setCurrentKeyboardFocusManager(AKeyboardFocusManager.get());
 
@@ -55,17 +55,17 @@ public class POSClient {
 			{
 				//	Center the window
 				try {
-					AEnvPOS.showCenterScreen(login);	//	HTML load errors
+					AEnv.showCenterScreen(login);	//	HTML load errors
 				} catch (Exception ex) {
 					
 				}
 				if (!login.isConnected() || !login.isOKpressed())
-					AEnvPOS.exit(1);
+					AEnv.exit(1);
 			}
 
 			//  Check Build
 			if (!DB.isBuildOK(m_ctx))
-				AEnvPOS.exit(1);
+				AEnv.exit(1);
 
 			//  Check DB	(AppsServer Version checked in Login)
 			DB.isDatabaseOK(m_ctx);

@@ -45,7 +45,6 @@ import org.compiere.util.ASyncProcess;
 import org.compiere.util.CLogger;
 import org.compiere.util.Env;
 import org.compiere.util.Msg;
-import org.idempiere.util.EnvPOS;
 
 /**
  *	Process Parameter Panel, based on existing ProcessParameter dialog.
@@ -540,7 +539,7 @@ public class ProcessPanel extends ProcessController
 				int M_InOut_ID = ids[i];
 				ReportCtlPOS.startDocumentPrint(ReportEngine.SHIPMENT, M_InOut_ID, this, getWindowNo(), true);
 			}
-			ADialogDialog d = new ADialogDialog (EnvPOS.getWindow(getWindowNo()),
+			ADialogDialog d = new ADialogDialog (AEnv.getWindow(getWindowNo()),
 				Env.getHeader(Env.getCtx(), getWindowNo()),
 				Msg.getMsg(Env.getCtx(), "PrintoutOK?"),
 				JOptionPane.QUESTION_MESSAGE);
@@ -567,7 +566,7 @@ public class ProcessPanel extends ProcessController
 				int AD_Invoice_ID = ids[i];
 				ReportCtlPOS.startDocumentPrint(ReportEngine.INVOICE, AD_Invoice_ID, this, getWindowNo(), true);
 			}
-			ADialogDialog d = new ADialogDialog (EnvPOS.getWindow(getWindowNo()),
+			ADialogDialog d = new ADialogDialog (AEnv.getWindow(getWindowNo()),
 				Env.getHeader(Env.getCtx(), getWindowNo()),
 				Msg.getMsg(Env.getCtx(), "PrintoutOK?"),
 				JOptionPane.QUESTION_MESSAGE);

@@ -23,7 +23,7 @@ import java.util.Properties;
 import javax.swing.JFrame;
 
 import org.compiere.Adempiere;
-import org.compiere.apps.AEnvPOS;
+import org.compiere.apps.AEnv;
 import org.compiere.apps.AKeyboardFocusManager;
 import org.compiere.apps.ALogin;
 import org.compiere.apps.form.FormFrame;
@@ -58,17 +58,17 @@ public class POSApplication {
 		{
 			//	Center the window
 			try {
-				AEnvPOS.showCenterScreen(login);	//	HTML load errors
+				AEnv.showCenterScreen(login);	//	HTML load errors
 			} catch (Exception ex) {
 				
 			}
 			if (!login.isConnected() || !login.isOKpressed())
-				AEnvPOS.exit(1);
+				AEnv.exit(1);
 		}
 
 		//  Check Build
 		if (!DB.isBuildOK(m_ctx))
-			AEnvPOS.exit(1);
+			AEnv.exit(1);
 
 		//  Check DB	(AppsServer Version checked in Login)
 		DB.isDatabaseOK(m_ctx);
@@ -102,7 +102,7 @@ public class POSApplication {
 //		});
 
 		VPOS pos = new VPOS();
-		pos.init(0,(frame);
+		pos.init(0,(frame));
 		frame.pack();
 		splash.dispose();
 		splash = null;	

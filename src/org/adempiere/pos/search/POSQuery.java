@@ -35,7 +35,7 @@ import org.adempiere.pos.POSTextField;
 import org.adempiere.pos.VPOS;
 import org.adempiere.pos.service.POSQueryInterface;
 import org.adempiere.pos.service.POSQueryListener;
-import org.compiere.apps.AEnvPOS;
+import org.compiere.apps.AEnv;
 import org.compiere.apps.AppsAction;
 import org.compiere.apps.StatusBar;
 import org.compiere.grid.ed.VDate;
@@ -49,7 +49,6 @@ import org.compiere.swing.CDialog;
 import org.compiere.swing.CPanel;
 import org.compiere.swing.CScrollPane;
 import org.compiere.util.CLogger;
-import org.idempiere.util.EnvPOS;
 
 /**
  * 
@@ -346,13 +345,13 @@ public abstract class POSQuery extends CDialog
 	 * 	Constructor
 	 */
 	public POSQuery (VPOS posPanel) {
-		super(EnvPOS.getWindow(posPanel.getWindowNo()), true);
+		super(AEnv.getWindow(posPanel.getWindowNo()), true);
 		this.posPanel = posPanel;
 		ctx = posPanel.getCtx();
 		initMainPanel();
 		init();
 		pack();
-		AEnvPOS.positionCenterScreen(this);
+		AEnv.positionCenterScreen(this);
 	}	//	PosQuery
 
 	/**

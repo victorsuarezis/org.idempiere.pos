@@ -43,7 +43,7 @@ import org.adempiere.model.MViewDefinition;
 import org.adempiere.util.IProcessUI;
 import org.compiere.Adempiere;
 import org.compiere.apps.ADialog;
-import org.compiere.apps.AEnvPOS;
+import org.compiere.apps.AEnv;
 import org.compiere.apps.AppsAction;
 import org.compiere.apps.ConfirmPanel;
 import org.compiere.apps.ProcessController;
@@ -51,7 +51,7 @@ import org.compiere.apps.ProcessCtlPOS;
 import org.compiere.apps.ProcessPanel;
 import org.compiere.apps.StatusBar;
 import org.compiere.apps.Waiting;
-import org.compiere.apps.form.FormFramePOS;
+import org.compiere.apps.form.FormFrame;
 import org.compiere.grid.ed.VEditorPOS;
 import org.adempiere.model.GridField;
 import org.compiere.model.MQuery;
@@ -72,7 +72,6 @@ import org.compiere.util.Splash;
 import org.eevolution.grid.Browser;
 import org.eevolution.grid.BrowserSearch;
 import org.eevolution.grid.VBrowserTable;
-import org.idempiere.util.EnvPOS;
 
 /**
  * UI Browser
@@ -119,7 +118,7 @@ public class VBrowser extends Browser implements ActionListener, ListSelectionLi
 		String value = "";
 		String keyColumn = "";
 		boolean multiSelection = true;
-		FormFramePOS ff = new FormFramePOS(windowNo);
+		FormFrame ff = new FormFrame (windowNo);
 		return new VBrowser(ff, modal , windowNo, value, browse, keyColumn,multiSelection, whereClause, isSOTrx)
 		.getFrame();
 	}
@@ -137,7 +136,7 @@ public class VBrowser extends Browser implements ActionListener, ListSelectionLi
 	 * @param whereClause where clause
 	 * @param isSOTrx
 	 */
-	public VBrowser(FormFramePOS frame, boolean modal, int WindowNo, String value,
+	public VBrowser(FormFrame frame, boolean modal, int WindowNo, String value,
 			MBrowse browse, String keyColumn, boolean multiSelection,
 			String whereClause, Boolean isSOTrx) {
 		super(modal, WindowNo, value, browse, keyColumn, multiSelection,
@@ -145,7 +144,7 @@ public class VBrowser extends Browser implements ActionListener, ListSelectionLi
 		m_frame = frame;
 		m_frame.setTitle(browse.getTitle());
 		m_frame.getContentPane().add(statusBar, BorderLayout.SOUTH);
-		windowNo = EnvPOS.createWindowNo(m_frame.getContainer());
+		windowNo = AEnv.createWindowNo(m_frame.getContainer());
 		Env.setContext(Env.getCtx(), windowNo, "IsSOTrx", isSOTrx ? "Y" : "N");
 		setProcessInfo(frame.getProcessInfo());
 		copyWinContext();
@@ -185,7 +184,7 @@ public class VBrowser extends Browser implements ActionListener, ListSelectionLi
 	private CollapsiblePanelPOS collapsibleSearch;
 	private VBrowserSearch  searchPanel;
 	/**	Form Frame				*/
-	private FormFramePOS m_frame;
+	private FormFrame m_frame;
 
 	
 	@Override
@@ -322,7 +321,7 @@ public class VBrowser extends Browser implements ActionListener, ListSelectionLi
 		
 		MQuery query = getMQuery(detail);
 		if(query != null)
-			AEnvPOS.zoom(m_frame.getContainer(), getAD_Window_ID() , query);
+			AEnv.zoom(m_frame.getContainer(), getAD_Window_ID() , query);
 		
 		m_frame.setCursor(Cursor.getDefaultCursor());
 		bZoom.setSelected(false);
@@ -679,7 +678,7 @@ public class VBrowser extends Browser implements ActionListener, ListSelectionLi
 
 		Properties m_ctx = Env.getCtx();
 		MBrowse browse = new MBrowse(m_ctx, 50025, null);
-		FormFramePOS frame = new FormFramePOS(0);
+		FormFrame frame = new FormFrame(0);
 		boolean modal = true;
 		int WindowNo = 0;
 		String value = "";

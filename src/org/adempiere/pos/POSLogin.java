@@ -21,6 +21,7 @@ import javax.swing.KeyStroke;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.compiere.apps.AEnv;
 import org.compiere.apps.AppsAction;
 import org.compiere.swing.CButton;
 import org.compiere.swing.CDialog;
@@ -28,7 +29,6 @@ import org.compiere.swing.CLabel;
 import org.compiere.swing.CPanel;
 import org.compiere.util.Login;
 import org.compiere.util.Msg;
-import org.idempiere.util.EnvPOS;
 
 /**
  * 
@@ -53,7 +53,7 @@ public class POSLogin extends CDialog implements ActionListener {
 	 */
 	public POSLogin (VPOS posPanel)
 	{
-		super (EnvPOS.getWindow(posPanel.getWindowNo()),Msg.translate(posPanel.getCtx(), "Login"), true);
+		super (AEnv.getWindow(posPanel.getWindowNo()),Msg.translate(posPanel.getCtx(), "Login"), true);
 		init();
 		this.posPanel = posPanel;
 	}

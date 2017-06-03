@@ -10,7 +10,6 @@ import org.compiere.util.CLogger;
 import org.compiere.util.Env;
 import org.compiere.util.Msg;
 import org.compiere.util.Trx;
-import org.idempiere.util.EnvPOS;
 
 public class ProcessCtlPOS extends ProcessCtl {
 	
@@ -77,11 +76,11 @@ public class ProcessCtlPOS extends ProcessCtl {
 		//	Get Parameters (Dialog)
 		//	FR [ 265 ]
 		//	Change to Standard Process Modal Dialog
-		ProcessModalDialogPOS para = new ProcessModalDialogPOS(EnvPOS.getFrame((Container)parent), WindowNo, pi);
+		ProcessModalDialogPOS para = new ProcessModalDialogPOS(AEnv.getFrame((Container)parent), WindowNo, pi);
 		if (para.isValidDialog()) {
 			para.validate();
 			para.pack();
-			AEnvPOS.showCenterWindow(EnvPOS.getWindow(WindowNo), para);
+			AEnv.showCenterWindow(AEnv.getWindow(WindowNo), para);
 			if (!para.isOK()) {
 				return null;
 			}

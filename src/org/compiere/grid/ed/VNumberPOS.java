@@ -49,7 +49,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 
 import org.adempiere.exceptions.ValueChangeListener;
-import org.compiere.apps.AEnvPOS;
+import org.compiere.apps.AEnv;
 import org.compiere.apps.RecordInfoPOS;
 import org.compiere.model.GridField;
 import org.compiere.model.MRole;
@@ -59,7 +59,6 @@ import org.compiere.swing.CTextField;
 import org.compiere.util.CLogger;
 import org.compiere.util.DisplayType;
 import org.compiere.util.Env;
-import org.idempiere.util.EnvPOS;
 
 /**
  *	Number Control
@@ -744,13 +743,13 @@ public final class VNumberPOS extends JComponent
 		}
 		
 		//	Find frame
-		Frame frame = EnvPOS.getFrame(jc);
+		Frame frame = AEnv.getFrame(jc);
 		//	Actual Call
 		Calculator calc = new Calculator(frame, title,
 			displayType, format, startValue);
 		if ( "*+-/%".indexOf(operator) > -1 )
 			calc.handleInput(operator);
-		AEnvPOS.showCenterWindow(frame, calc);
+		AEnv.showCenterWindow(frame, calc);
 		BigDecimal result = calc.getNumber();
 		log.config( "Result=" + result);
 		//

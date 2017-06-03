@@ -35,8 +35,9 @@ import org.adempiere.pos.search.QueryBPartner;
 import org.adempiere.pos.service.POSQueryInterface;
 import org.adempiere.pos.service.POSQueryListener;
 import org.compiere.apps.ADialog;
-import org.compiere.apps.AEnvPOS;
+import org.compiere.apps.AEnv;
 import org.compiere.apps.Waiting;
+import org.compiere.apps.form.FormFrame;
 import org.compiere.model.MBPartner;
 import org.compiere.process.ProcessInfo;
 import org.compiere.util.Env;
@@ -138,7 +139,7 @@ public class POSActionMenu implements  ActionListener , POSQueryListener{
                         + " @To@ @C_BPartner_ID@ : " + partner.getName()
                         + " @TaxID@ : " + taxId.orElse("");
                 if (ADialog.ask(pos.getWindowNo(), popupMenu, "StartProcess?", Msg.parseTranslation(pos.getCtx(), processMessage))) {
-                    AEnvPOS.showCenterScreen(waiting);
+                    AEnv.showCenterScreen(waiting);
                     command.execute(receiver);
                     ProcessInfo processInfo = receiver.getProcessInfo();
                     waiting.setVisible(false);
@@ -171,7 +172,7 @@ public class POSActionMenu implements  ActionListener , POSQueryListener{
                         + " @To@ @C_BPartner_ID@ : " + pos.getBPName();
 
                 if (ADialog.ask(pos.getWindowNo(), popupMenu, "StartProcess?", Msg.parseTranslation(pos.getCtx(), processMessage))) {
-                    AEnvPOS.showCenterScreen(waiting);
+                    AEnv.showCenterScreen(waiting);
                     command.execute(receiver);
                     ProcessInfo processInfo = receiver.getProcessInfo();
                     waiting.setVisible(false);
@@ -201,7 +202,7 @@ public class POSActionMenu implements  ActionListener , POSQueryListener{
                         + " @To@ @C_BPartner_ID@ : " + pos.getBPName();
 
                 if (ADialog.ask(pos.getWindowNo(), popupMenu, "StartProcess?", Msg.parseTranslation(pos.getCtx(), processMessage))) {
-                    AEnvPOS.showCenterScreen(waiting);
+                    AEnv.showCenterScreen(waiting);
                     command.execute(receiver);
                     ProcessInfo processInfo = receiver.getProcessInfo();
                     waiting.setVisible(false);
@@ -228,7 +229,7 @@ public class POSActionMenu implements  ActionListener , POSQueryListener{
                 MBrowse browse = new MBrowse(Env.getCtx(), 50056 , null);
                 new VBrowser(ff, true , pos.getWindowNo(), "" , browse , "" , true, "", true);
                 ff.pack();
-                AEnvPOS.showCenterScreen(ff.getWindow());
+                AEnv.showCenterScreen(ff.getWindow());
             } else if (command.getCommand() == CommandManager.CLOSE_STATEMENT) {
                 Env.setContext(pos.getCtx(), pos.getWindowNo() , "C_POS_ID" , pos.getC_POS_ID());
                 Dimension size = new Dimension(1024, 768);
@@ -237,7 +238,7 @@ public class POSActionMenu implements  ActionListener , POSQueryListener{
                 MBrowse browse = new MBrowse(Env.getCtx(), 50057 , null);
                 new VBrowser(ff, true , pos.getWindowNo(), "" , browse , "" , true, "", true);
                 ff.pack();
-                AEnvPOS.showCenterScreen(ff.getWindow());
+                AEnv.showCenterScreen(ff.getWindow());
             }
         }
         catch (Exception exception)

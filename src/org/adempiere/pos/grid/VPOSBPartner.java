@@ -33,7 +33,7 @@ import org.adempiere.plaf.AdempierePLAF;
 import org.adempiere.pos.POSTextField;
 import org.adempiere.pos.VPOS;
 import org.compiere.apps.ADialog;
-import org.compiere.apps.AEnvPOS;
+import org.compiere.apps.AEnv;
 import org.compiere.apps.ConfirmPanel;
 import org.compiere.grid.ed.VLocation;
 import org.compiere.model.MBPartner;
@@ -92,7 +92,7 @@ public final class VPOSBPartner extends CDialog implements ActionListener
 		}
 		initBPartner();
 		//
-		AEnvPOS.positionCenterWindow(frame, this);
+		AEnv.positionCenterWindow(frame, this);
 	}	//	VBPartner
 
 	private VPOS 			pos;

@@ -41,7 +41,6 @@ import org.compiere.swing.CTextArea;
 import org.compiere.util.CLogger;
 import org.compiere.util.Env;
 import org.compiere.util.Msg;
-import org.idempiere.util.EnvPOS;
 
 /**
  * Record Info (Who) With Change History
@@ -100,7 +99,7 @@ public class RecordInfoPOS extends RecordInfoController
 		{
 			log.log(Level.SEVERE, "", e);
 		}
-		AEnvPOS.positionCenterWindow (owner, m_Dialog);
+		AEnv.positionCenterWindow (owner, m_Dialog);
 	}	//	RecordInfo
 	
 	/**
@@ -199,8 +198,8 @@ public class RecordInfoPOS extends RecordInfoController
 	 */
 	public static void start(GridField mField) {
 		int WindowNo = mField.getWindowNo();
-		Frame frame = EnvPOS.getWindow(WindowNo);
+		Frame frame = AEnv.getWindow(WindowNo);
 		RecordInfoPOS info = new RecordInfoPOS(frame, mField);
-		AEnvPOS.showCenterScreen(info.getDialog());
+		AEnv.showCenterScreen(info.getDialog());
 	}
 }	// RecordInfo
