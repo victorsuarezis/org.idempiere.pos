@@ -203,9 +203,9 @@ public class ProcessBuilder {
     {
         Runnable processCtl;
         if (windowNo == 0)
-            processCtl = processCtl("org.compiere.process.ServerProcessCtl", parent, windowNo, processInfo, Trx.get(trxName, false));
+            processCtl = processCtl("org.compiere.process.ServerProcessCtlPOS", parent, windowNo, processInfo, Trx.get(trxName, false));
         else
-            processCtl = processCtl("org.compiere.apps.ProcessCtl", parent, windowNo, processInfo, Trx.get(trxName, false));
+            processCtl = processCtl("org.compiere.apps.ProcessCtlPOS", parent, windowNo, processInfo, Trx.get(trxName, false));
 
         processCtl.run();
     }

@@ -375,7 +375,7 @@ public class VPOS extends CPOS implements FormPanel, POSPanelInterface, POSScale
 	 * 	The Sub Panels return their position
 	 */
 	private boolean dynInit() {
-		frame.setTitle("Adempiere POS: " + getPOSName());
+		frame.setTitle("iDempiere POS: " + getPOSName());
 		//	Create Sub Panels
 		leftPanel = new CPanel(new GridBagLayout());
 		actionPanel = new POSActionPanel(this);

@@ -45,18 +45,18 @@ public class MBPartnerInfoPOS extends MBPartnerInfo {
 		StringBuffer sb = new StringBuffer();
 		value = getFindParameter (value);
 		if (value != null)
-			sb.append("UPPER(Value) LIKE ?");
+			sb.append(" UPPER(Value) LIKE ? ");
 
 		taxId = getFindParameter (taxId);
 		if (taxId != null)
-			sb.append("UPPER(TaxID) LIKE ?");
+			sb.append(" UPPER(TaxID) LIKE ? ");
 
 		name = getFindParameter (name);
 		if (name != null)
 		{
 			if (sb.length() > 0)
 				sb.append(" OR ");
-			sb.append("UPPER(Name) LIKE ?");
+			sb.append(" UPPER(Name) LIKE ? ");
 		}
 
 		name2 = getFindParameter (name2);
@@ -64,7 +64,7 @@ public class MBPartnerInfoPOS extends MBPartnerInfo {
 		{
 			if (sb.length() > 0)
 				sb.append(" OR ");
-			sb.append("UPPER(Name2) LIKE ?");
+			sb.append(" UPPER(Name2) LIKE ? ");
 		}
 
 		contact = getFindParameter (contact);
@@ -72,32 +72,32 @@ public class MBPartnerInfoPOS extends MBPartnerInfo {
 		{
 			if (sb.length() > 0)
 				sb.append(" OR ");
-			sb.append("UPPER(ContactName) LIKE ?");
+			sb.append(" UPPER(ContactName) LIKE ? ");
 		}
 		eMail = getFindParameter (eMail);
 		if (eMail != null)
 		{
 			if (sb.length() > 0)
 				sb.append(" OR ");
-			sb.append("UPPER(EMail) LIKE ?");
+			sb.append(" UPPER(EMail) LIKE ? ");
 		}
 		phone = getFindParameter (phone);
 		if (phone != null)
 		{
 			if (sb.length() > 0)
 				sb.append(" OR ");
-			sb.append("UPPER(Phone) LIKE ?");
+			sb.append(" UPPER(Phone) LIKE ? ");
 		}
 		city = getFindParameter (city);
 		if (city != null)
 		{
 			if (sb.length() > 0)
 				sb.append(" OR ");
-			sb.append("UPPER(City) LIKE ?");
+			sb.append(" UPPER(City) LIKE ? ");
 		}
 		if (sb.length() > 0)
 			sql.append(" AND (").append(sb).append(")");
-		sql.append(" ORDER BY Value");
+		sql.append(" ORDER BY Value ");
 		//
 		String finalSQL = MRole.getDefault().addAccessSQL(sql.toString(), 
 			"RV_BPartner", MRole.SQL_NOTQUALIFIED, MRole.SQL_RO);

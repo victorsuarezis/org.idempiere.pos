@@ -55,14 +55,12 @@ import org.compiere.apps.form.FormFrame;
 import org.compiere.grid.ed.VEditorPOS;
 import org.adempiere.model.GridField;
 import org.compiere.model.MQuery;
-import org.compiere.process.ProcessInfo;
 import org.compiere.process.ProcessInfoPOS;
 import org.compiere.swing.CButton;
 import org.compiere.swing.CFrame;
 import org.compiere.swing.CPanel;
 import org.compiere.swing.CollapsiblePanel;
 import org.compiere.swing.CollapsiblePanelPOS;
-import org.compiere.util.ASyncProcess;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.compiere.util.Ini;
@@ -102,7 +100,7 @@ import org.eevolution.grid.VBrowserTable;
  *		<li>BR [ 460 ] Update context when you select a row in a SmartBrowser
  *		@see https://github.com/adempiere/adempiere/issues/460
  */
-public class VBrowser extends Browser implements ActionListener, ListSelectionListener, ASyncProcess {
+public class VBrowser extends Browser implements ActionListener, ListSelectionListener {
 	/**
 	 * get Browse
 	 * @param windowNo
@@ -754,26 +752,6 @@ public class VBrowser extends Browser implements ActionListener, ListSelectionLi
 				detail.getData().setCurrentRow(rowTable);
 			}
 		}
-	}
-	
-	@Override
-	public void executeASync(ProcessInfo pi) {
-		
-	}
-	
-	@Override
-	public boolean isUILocked() {
-		return false;
-	}
-
-	@Override
-	public void lockUI(ProcessInfo pi) {
-		
-	}
-
-	@Override
-	public void unlockUI(ProcessInfo pi) {
-		
 	}
 	
 	@Override

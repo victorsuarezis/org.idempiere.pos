@@ -52,6 +52,7 @@ public class MBankStatementPOS extends MBankStatement {
 			bankStatement =  new MBankStatement(payment.getCtx() , 0 , payment.get_TrxName());
 			bankStatement.setC_BankAccount_ID(payment.getC_BankAccount_ID());
 			bankStatement.setStatementDate(payment.getDateAcct());
+			bankStatement.setDateAcct(payment.getDateAcct());
 			bankStatement.setName(payment.getDescription());
 			bankStatement.saveEx();
 		}
