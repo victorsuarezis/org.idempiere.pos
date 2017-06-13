@@ -102,6 +102,9 @@ import org.compiere.util.ValueNamePair;
  *  @author hengsin, hengsin.low@idalica.com
  *  @see FR [2887701] https://sourceforge.net/tracker/?func=detail&atid=879335&aid=2887701&group_id=176962
  *  @sponsor www.metas.de
+ *  
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class VLookupPOS extends JComponent
 	implements VEditor, ActionListener, FocusListener

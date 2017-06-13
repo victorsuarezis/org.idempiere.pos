@@ -45,6 +45,9 @@ import java.util.EventObject;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  * 		<li>BR [ 268 ] Smart Browse Table don't have a MVC
  * 		@see https://github.com/adempiere/adempiere/issues/268
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public final class VBrowserCellEditor extends AbstractCellEditor
         implements TableCellEditor, VetoableChangeListener, ActionListener {

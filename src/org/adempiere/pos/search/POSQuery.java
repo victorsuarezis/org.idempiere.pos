@@ -59,7 +59,10 @@ import org.compiere.util.CLogger;
  *  @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *  @author Dixon Martinez, dmartinez@erpcya.com, ERPCYA http://www.erpcya.com
  *  @author victor.perez@e-evolution.com , http://www.e-evolution.com
- *  @version $Id: PosQuery.java,v 2.0 2015/09/01 00:00:00 
+ *  @version $Id: PosQuery.java,v 2.0 2015/09/01 00:00:00
+ *   
+ *  @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public abstract class POSQuery extends CDialog
 	implements MouseListener, ActionListener, KeyListener ,

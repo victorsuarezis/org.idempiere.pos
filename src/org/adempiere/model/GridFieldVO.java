@@ -55,6 +55,9 @@ import org.compiere.util.Env;
  *  @author Raul Munoz, rmunoz@erpcya.com, ERPCyA http://www.erpcya.com
  *    <li>  FR [ 566 ] Get Correct Validation Code 
  *  @version  $Id: GridFieldVO.java,v 1.3 2006/07/30 00:58:04 jjanke Exp $
+ *  
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class GridFieldVO implements Serializable
 {

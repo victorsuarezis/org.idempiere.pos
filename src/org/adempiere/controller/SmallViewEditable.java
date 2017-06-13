@@ -28,6 +28,9 @@ import org.compiere.swing.CEditor;
  * and the UI editors.
  * 
  * @author mckayERP michael.mckay@mckayerp.com
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  *
  */
 public interface SmallViewEditable {

@@ -34,6 +34,8 @@ import org.compiere.util.ValueNamePair;
  * 
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Aug 24, 2015, 8:57:21 PM
  *
+ *  @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class CollectDetail {
 	

@@ -19,6 +19,9 @@ package org.adempiere.pos.command;
 /**
  * Interface to implement command pattern
  * eEvolution author Victor Perez <victor.perez@e-evolution.com>, Created by e-Evolution on 23/01/16.
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public interface Command {
     void execute(CommandReceiver commandReceiver) throws Exception;

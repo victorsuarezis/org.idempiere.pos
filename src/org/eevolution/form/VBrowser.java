@@ -99,6 +99,9 @@ import org.eevolution.grid.VBrowserTable;
  *		@see https://github.com/adempiere/adempiere/issues/394
  *		<li>BR [ 460 ] Update context when you select a row in a SmartBrowser
  *		@see https://github.com/adempiere/adempiere/issues/460
+ *
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class VBrowser extends Browser implements ActionListener, ListSelectionListener {
 	/**

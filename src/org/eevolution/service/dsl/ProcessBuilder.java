@@ -51,6 +51,9 @@ import java.util.Properties;
  *		@see https://github.com/adempiere/adempiere/issues/244
  *		<li> FR [ 352 ] T_Selection is better send to process like a HashMap instead read from disk
  *		@see https://github.com/adempiere/adempiere/issues/352
+ *
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class ProcessBuilder {
 

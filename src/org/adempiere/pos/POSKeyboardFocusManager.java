@@ -30,6 +30,9 @@ import org.compiere.util.CLogger;
  *         *Copyright (c) Jorg Janke
  * @version $Id: PosKeyboardFocusManager.java,v 1.2 2004/07/11 19:50:12 jjanke
  *          Exp $
+ *          
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class POSKeyboardFocusManager extends DefaultKeyboardFocusManager
 		implements ActionListener {

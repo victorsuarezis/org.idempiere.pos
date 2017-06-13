@@ -53,6 +53,9 @@ import org.compiere.util.Msg;
  * View displays that contain fields should implement the SmallViewEditable interface.  
  *  
  * @author mckayERP michael.mckay@mckayerp.com
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  *
  */
 public abstract class SmallViewController implements SmallViewEditable, VetoableChangeListener, PropertyChangeListener, ValueChangeListener {

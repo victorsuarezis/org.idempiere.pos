@@ -23,13 +23,20 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-/* 
+/** 
  * @author antonio.canaveral@..., http://www.e-evolution.com
  * @author victor.perez@..., http://www.e-evolution.com
  * Table cell editor for BigDecimal
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class BigDecimalEditor extends DefaultCellEditor
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3487055822507145483L;
 	JTextField textField;
 
 	public BigDecimalEditor()

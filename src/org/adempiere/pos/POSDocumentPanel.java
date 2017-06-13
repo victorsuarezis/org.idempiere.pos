@@ -1,4 +1,5 @@
 /******************************************************************************
+
  * Product: Adempiere ERP & CRM Smart Business Solution                       *
  * Copyright (C) 1999-2006 Adempiere, Inc. All Rights Reserved.               *
  * This program is free software; you can redistribute it and/or modify it    *
@@ -55,6 +56,9 @@ import org.compiere.util.Msg;
  *  @author victor.perez@e-evolution.com , http://www.e-evolution.com
  *  <li> Implement best practices
  *  @version $Id: SubFunctionKeys.java,v 1.1 2004/07/12 04:10:04 jjanke Exp $
+ *  
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class POSDocumentPanel extends POSSubPanel
 	implements POSKeyListener, ActionListener, POSPanelInterface, POSQueryListener {

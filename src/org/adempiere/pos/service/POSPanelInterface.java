@@ -16,6 +16,9 @@ package org.adempiere.pos.service;
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Sep 22, 2015, 11:52:44 PM
  * <li> Interface for implement refresh and validate methods in POS Panel
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public interface POSPanelInterface {
 	

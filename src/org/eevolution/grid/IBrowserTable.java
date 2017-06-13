@@ -32,6 +32,9 @@ import org.adempiere.model.GridField;
  * 		@see https://github.com/adempiere/adempiere/issues/245
  * 		<li>BR [ 268 ] Smart Browse Table don't have a MVC
  * 		@see https://github.com/adempiere/adempiere/issues/268
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public interface IBrowserTable {
 	public boolean isCellEditable(int row, int column);

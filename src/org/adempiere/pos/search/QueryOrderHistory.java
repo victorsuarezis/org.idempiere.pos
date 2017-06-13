@@ -54,7 +54,9 @@ import org.compiere.util.Msg;
  *  @version $Id: QueryTicket.java,v 0.9 $
  *  @version $Id: QueryProduct.java,v 1.1 jjanke Exp $
  *  @version $Id: QueryProduct.java,v 2.0 2015/09/01 00:00:00 scalderon
- * 
+ *  
+ *  @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 
 public class QueryOrderHistory extends POSQuery {

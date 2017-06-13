@@ -48,6 +48,9 @@ import org.compiere.util.NamePair;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *		<li> FR [ 146 ] Added like controller for RecordInfo
  *		@see https://github.com/adempiere/adempiere/issues/146
+ *
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class RecordInfoController {
 	

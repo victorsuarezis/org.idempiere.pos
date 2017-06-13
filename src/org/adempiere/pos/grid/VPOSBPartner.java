@@ -58,6 +58,9 @@ import org.compiere.util.Msg;
  *
  *  @author 	Jorg Janke
  *  @author victor.perez@e-evolution.com , http://www.e-evolution.com
+ *  
+ *  @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public final class VPOSBPartner extends CDialog implements ActionListener
 {

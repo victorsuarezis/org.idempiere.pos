@@ -19,7 +19,6 @@ package org.compiere.minigrid;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Insets;
-import java.awt.event.ItemListener;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -38,6 +37,9 @@ import org.adempiere.plaf.AdempierePLAF;
  * 		<li>release/380 - fix row selection event handling to fire single event per row selection
  *  
  *  @version    $Id: CheckRenderer.java,v 1.3 2013/11/03 $
+ *  
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public final class CheckRendererPOS extends DefaultTableCellRenderer
 {

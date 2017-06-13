@@ -45,6 +45,9 @@ import org.compiere.util.DisplayType;
  * 		<li>FR [ 2866571 ] VCellRenderer: implement getters
  * 			https://sourceforge.net/tracker/?func=detail&aid=2866571&group_id=176962&atid=879335</li>
  * 		<li>FR [ 3051618 ] VCellRenderer: preferred width from field.</li>
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public final class VCellRendererPOS extends DefaultTableCellRenderer
 {

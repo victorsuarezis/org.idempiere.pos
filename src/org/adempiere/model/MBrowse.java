@@ -38,6 +38,9 @@ import org.compiere.util.Env;
  * 		@see https://github.com/adempiere/adempiere/issues/267
  * 		<li>FR [ 344 ] Smart Browse Search View is not MVC
  * 		@see https://github.com/adempiere/adempiere/issues/344
+ * 
+ *  @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class MBrowse extends X_AD_Browse {
 

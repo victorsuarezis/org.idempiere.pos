@@ -52,6 +52,9 @@ import org.compiere.util.Env;
  *  <li>Add support to SCAPE and ENTER keys
  *  <li>Default focus in Text
  *	Adaxa Pty Ltd
+ *
+ *  @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class POSKeyboard extends CDialog 
 	implements ActionListener, POSKeyListener, KeyListener, FocusListener, WindowFocusListener {
