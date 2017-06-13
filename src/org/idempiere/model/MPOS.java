@@ -33,6 +33,9 @@ import org.compiere.util.Msg;
  *	
  *  @author Jorg Janke
  *  @version $Id: MPOS.java,v 1.3 2006/07/30 00:51:05 jjanke Exp $
+ *  
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class MPOS extends org.idempiere.model.X_C_POS
 {

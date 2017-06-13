@@ -45,6 +45,9 @@ import java.util.List;
 /**
  * Process allows reverse the sales order using new documents with new dates and cancel of original effects
  * eEvolution author Victor Perez <victor.perez@e-evolution.com>, Created by e-Evolution on 23/12/15.
+ * 
+ *  @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class ReverseTheSalesTransaction extends ReverseTheSalesTransactionAbstract  {
     private Timestamp today;

@@ -37,6 +37,9 @@ import org.compiere.util.Msg;
  * eEvolution author Victor Perez <victor.perez@e-evolution.com>, Created by e-Evolution on 29/01/16.
  * <li> Define columns of order line table
  * <li> Handle the Load from DB
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class POSOrderLineTableHandle {
 	

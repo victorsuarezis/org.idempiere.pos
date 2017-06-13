@@ -52,6 +52,9 @@ import org.compiere.util.Msg;
  * 		@see FR [ 566 ] Process parameter don't have a parameter like only information</a>
  *	@author Michael Mckay michael.mckay@mckayerp.com
  *		<li>BF [ <a href="https://github.com/adempiere/adempiere/issues/495">495</a> ] Parameter Panel & SmartBrowser criteria do not set gridField value
+ *
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public abstract class ProcessController extends SmallViewController {
 	

@@ -65,6 +65,9 @@ import org.compiere.util.Msg;
  *  @version $Id: SubOrder.java,v 1.1 2004/07/12 04:10:04 jjanke Exp $
  *  @version $Id: SubOrder.java,v 2.0 2015/09/01 00:00:00 mar_cal_westf
  *  @author victor.perez@e-evolution.com , http://www.e-evolution.com
+ *  
+ *  @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class POSActionPanel extends POSSubPanel 
 	implements ActionListener, POSPanelInterface, POSQueryListener , POSLookupProductInterface {

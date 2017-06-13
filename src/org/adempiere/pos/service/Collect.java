@@ -43,6 +43,8 @@ import org.idempiere.model.MPaymentProcessorPOS;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  * @author Victor Perez <victor.perez@e-evolution.com>,  eEvolution http://www.e-evolution.com
  *
+ *  @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class Collect {
 	

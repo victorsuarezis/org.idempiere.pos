@@ -20,6 +20,9 @@ package org.adempiere.pos.command;
 /**
  * execute Complete a return material command
  * eEvolution author Victor Perez <victor.perez@e-evolution.com>, Created by e-Evolution on 23/01/16.
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class CommandCloseStatement extends CommandAbstract implements Command {
     public CommandCloseStatement(String command, String event) {

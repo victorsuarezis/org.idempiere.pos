@@ -65,6 +65,9 @@ import org.eevolution.form.VBrowser;
  * 		@see https://github.com/adempiere/adempiere/issues/456
  * 		<li><a href="https://github.com/adempiere/adempiere/issues/560">
  * 		FR [ 560 ] SB on ZK have always editable the columns</a>
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class VBrowserTable extends CTable implements IBrowserTable {
     /**

@@ -58,6 +58,9 @@ import org.compiere.util.Msg;
  *
  *  @author 	Jorg Janke
  *  @author victor.perez@e-evolution.com , http://www.e-evolution.com
+ *  
+ *  @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public final class VPOSBPartner extends CDialog implements ActionListener
 {
@@ -114,7 +117,7 @@ public final class VPOSBPartner extends CDialog implements ActionListener
 	/**	Logger			*/
 	private static CLogger log = CLogger.getCLogger(VPOSBPartner.class);
 	//
-	private POSTextField 	fValue, fName, fName2, fContact, fPhone, fPhone2, fEMail;
+	private POSTextField 	fValue, fName, fName2, fContact, fPhone, fPhone2, fEMail, fLCO_TaxIDType_ID, fTaxID;
 	private VLocation 		fAddress;
 
 	//
@@ -163,6 +166,17 @@ public final class VPOSBPartner extends CDialog implements ActionListener
 		m_gbc.ipady = 0;
 		m_line = 0;
 
+		//	LCO_TaxIDType_ID
+		fLCO_TaxIDType_ID = new POSTextField("LCO_TaxIDType_ID", pos.getKeyboard());
+		fLCO_TaxIDType_ID.addActionListener(this);
+		createLine (fLCO_TaxIDType_ID, "LCO_TaxIDType_ID", true);
+		fLCO_TaxIDType_ID.setBackground(AdempierePLAF.getFieldBackground_Mandatory());
+		// TaxID
+		fTaxID = new POSTextField("TaxID", pos.getKeyboard());
+		fTaxID.addActionListener(this);
+		createLine (fTaxID, "TaxID", true);
+		fTaxID.setBackground(AdempierePLAF.getFieldBackground_Mandatory());
+		
 		//	Value
 		fValue = new POSTextField("Value", pos.getKeyboard());
 		fValue.addActionListener(this);

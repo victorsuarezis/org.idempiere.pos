@@ -47,6 +47,9 @@ import org.compiere.util.CLogger;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  * @author Raul Muñoz, rmunoz@erpcya.com, ERPCYA http://www.erpcya.com
  * @author victor.perez@e-evolution.com , http://www.e-evolution.com
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  **/
 
 public class POSClientSide extends Thread {  

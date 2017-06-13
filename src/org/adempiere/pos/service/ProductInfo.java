@@ -26,6 +26,9 @@ import java.math.BigDecimal;
 
 /**
  * Created by victor.perez@e-evolution.com , e-Evolution on 19/12/15.
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class ProductInfo {
 

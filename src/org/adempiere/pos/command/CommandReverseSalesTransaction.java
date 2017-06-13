@@ -26,6 +26,9 @@ import org.eevolution.service.dsl.ProcessBuilder;
 /**
  * Execute reversal sales transaction command
  * eEvolution author Victor Perez <victor.perez@e-evolution.com>, Created by e-Evolution on 23/01/16.
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class CommandReverseSalesTransaction extends CommandAbstract implements Command {
 

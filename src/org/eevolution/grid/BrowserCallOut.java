@@ -25,6 +25,9 @@ import org.adempiere.model.GridField;
  *  Browser CallOut Interface for Browser CallOut.
  *  Used in Browser
  *  @author   eEvolution author Victor Perez<victor.perez@e-evolution.com>
+ *  
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */ 
 public interface BrowserCallOut
 {

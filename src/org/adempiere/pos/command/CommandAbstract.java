@@ -18,6 +18,9 @@ package org.adempiere.pos.command;
 /**
  * Command Abstract that implement common code for all command execution
  * eEvolution author Victor Perez <victor.perez@e-evolution.com>, Created by e-Evolution on 25/01/16.
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public abstract class CommandAbstract {
 

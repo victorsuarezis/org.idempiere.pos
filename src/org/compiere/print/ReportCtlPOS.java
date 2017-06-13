@@ -44,6 +44,9 @@ import org.compiere.util.Ini;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *		<li> BR [ 92 ] 
  *		@see https://github.com/adempiere/adempiere/issues/92
+ *
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class ReportCtlPOS {
 	/**

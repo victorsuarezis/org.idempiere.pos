@@ -84,6 +84,9 @@ import org.compiere.util.Msg;
  *		@see https://github.com/adempiere/adempiere/issues/352 * 
  * 		<li>BR [ 456 ] Smart Browser fill bad value for search
  * 		@see https://github.com/adempiere/adempiere/issues/456
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public abstract class Browser {
 	static public LinkedHashMap<String, Object> getBrowseValues(

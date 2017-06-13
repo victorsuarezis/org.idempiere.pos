@@ -57,6 +57,9 @@ import org.compiere.util.Env;
  * 		<li>release/380 - fix row selection event handling to fire single event per row selection
  * 
  *  @version 	$Id: VHeaderRenderer.java,v 1.3 2013/11/03 00:51:28
+ *  
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public final class VHeaderRendererPOS implements TableCellRenderer, MouseListener, ChangeListener 
 {

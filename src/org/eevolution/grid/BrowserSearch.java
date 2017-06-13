@@ -34,6 +34,9 @@ import org.compiere.util.Env;
  *	@author Michael Mckay michael.mckay@mckayerp.com
  *		<li> BR [ <a href="https://github.com/adempiere/adempiere/issues/495">495</a> ] 
  *			Parameter Panel & SmartBrowser criteria do not set gridField value
+ *
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration to iDempiere ERP Plugin.
  */
 public abstract class BrowserSearch extends SmallViewController {
 	

@@ -27,6 +27,9 @@ import org.compiere.process.ProcessInfo;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  * 		<a href="https://github.com/adempiere/adempiere/issues/672">
  * 		@see FR [ 672 ] Add abstract class for basic operation of POS (Generic Ticket Handler)</a>
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class POSGenericTicketHandler extends POSTicketHandler {
 

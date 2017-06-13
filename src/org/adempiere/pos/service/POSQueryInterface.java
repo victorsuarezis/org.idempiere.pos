@@ -18,7 +18,9 @@ package org.adempiere.pos.service;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Sep 26, 2015, 10:50:44 PM
- *
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public interface POSQueryInterface {
 	

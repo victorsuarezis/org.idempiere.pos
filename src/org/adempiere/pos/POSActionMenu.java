@@ -50,6 +50,9 @@ import org.eevolution.form.VBrowser;
  * @contributor Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  * 		<a href="https://github.com/adempiere/adempiere/issues/670">
  * 		@see FR [ 670 ] Standard process for return material on POS</a>
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class POSActionMenu implements  ActionListener , POSQueryListener{
 

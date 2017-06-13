@@ -22,6 +22,8 @@ import org.compiere.model.MPOSKey;
  * @author Paul Bowden
  * Adaxa Pty Ltd
  *
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public interface POSKeyListener {
 	

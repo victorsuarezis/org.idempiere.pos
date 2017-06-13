@@ -27,6 +27,9 @@ import org.eevolution.service.dsl.ProcessBuilder;
  * This process call of create order based on another and reverse the sales transactions process
  * to implement the business case where is necessary to create a sales ticket and invoice next day on behalf of other business partner
  * eEvolution author Victor Perez <victor.perez@e-evolution.com>, Created by e-Evolution on 28/12/15.
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class GenerateImmediateInvoice extends GenerateImmediateInvoiceAbstract implements ASyncProcess {
 

@@ -76,6 +76,9 @@ import org.compiere.util.Msg;
  * 			@see FR [ 571 ] Process Dialog is not MVC</a>
  * 			<a href="https://github.com/adempiere/adempiere/issues/602">
  * 			@see BR [ 602 ] Error in SmallViewController</a>
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class ProcessPanel extends ProcessController 
 	implements SmallViewEditable, ActionListener, ASyncProcess {

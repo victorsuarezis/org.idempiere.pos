@@ -16,25 +16,12 @@
 
 package org.adempiere.pos.command;
 
-import org.adempiere.pos.AdempierePOSException;
-import org.compiere.model.*;
-import org.compiere.print.ReportCtl;
-import org.compiere.print.ReportEngine;
-import org.compiere.process.DocAction;
-import org.compiere.process.ProcessInfo;
-import org.compiere.util.Msg;
-import org.compiere.util.Trx;
-import org.compiere.util.TrxRunnable;
-import org.eevolution.service.dsl.ProcessBuilder;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
-
 /**
  * execute Complete a return material command
  * eEvolution author Victor Perez <victor.perez@e-evolution.com>, Created by e-Evolution on 23/01/16.
+ * 
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class CommandWithdrawal extends CommandAbstract implements Command {
     public CommandWithdrawal(String command, String event) {

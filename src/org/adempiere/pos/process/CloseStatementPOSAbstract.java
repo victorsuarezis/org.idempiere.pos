@@ -25,6 +25,9 @@ import org.compiere.process.SvrProcess;
 /** Generated Process for (POS Bank Statement Close)
  *  @author ADempiere (generated) 
  *  @version Release 3.8.0
+ *  
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public abstract class CloseStatementPOSAbstract extends SvrProcess
 {

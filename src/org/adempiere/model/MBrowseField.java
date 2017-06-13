@@ -37,6 +37,9 @@ import org.compiere.util.DB;
  * 		@see https://github.com/adempiere/adempiere/issues/340
  *  	<li><a href="https://github.com/adempiere/adempiere/issues/560">
  * 		FR [ 560 ] SB on ZK have always editable the columns</a>
+ * 
+ *  @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public class MBrowseField extends X_AD_Browse_Field {
 

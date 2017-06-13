@@ -23,6 +23,8 @@ import org.compiere.util.ASyncProcess;
  *		<a href="https://github.com/adempiere/adempiere/issues/571">
  * 		@see FR [ 571 ] Process Dialog is not MVC</a>
  *
+ * @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
+ * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
 public interface IProcessDialog {
 	
