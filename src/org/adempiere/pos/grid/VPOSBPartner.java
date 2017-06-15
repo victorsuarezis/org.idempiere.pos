@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.util.logging.Level;
 
 import javax.swing.Box;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
 import org.adempiere.plaf.AdempierePLAF;
@@ -39,6 +40,7 @@ import org.compiere.grid.ed.VLocation;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MBPartnerLocation;
 import org.compiere.model.MBPartnerPOS;
+import org.compiere.model.MColumn;
 import org.compiere.model.MLocation;
 import org.compiere.model.MLocationLookup;
 import org.compiere.model.MRole;
@@ -49,6 +51,7 @@ import org.compiere.swing.CPanel;
 import org.compiere.util.CLogger;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
+import org.compiere.util.KeyNamePair;
 import org.compiere.util.Msg;
 
 /**
@@ -117,7 +120,9 @@ public final class VPOSBPartner extends CDialog implements ActionListener
 	/**	Logger			*/
 	private static CLogger log = CLogger.getCLogger(VPOSBPartner.class);
 	//
-	private POSTextField 	fValue, fName, fName2, fContact, fPhone, fPhone2, fEMail, fLCO_TaxIDType_ID, fTaxID;
+	private POSTextField 	fValue, fName, fName2, fContact, fPhone, fPhone2, fEMail, fTaxID;
+	private JComboBox<Object> fTaxIDType;
+	private Object[] m_taxidtype;
 	private VLocation 		fAddress;
 
 	//
@@ -166,11 +171,11 @@ public final class VPOSBPartner extends CDialog implements ActionListener
 		m_gbc.ipady = 0;
 		m_line = 0;
 
-		//	LCO_TaxIDType_ID
-		fLCO_TaxIDType_ID = new POSTextField("LCO_TaxIDType_ID", pos.getKeyboard());
-		fLCO_TaxIDType_ID.addActionListener(this);
-		createLine (fLCO_TaxIDType_ID, "LCO_TaxIDType_ID", true);
-		fLCO_TaxIDType_ID.setBackground(AdempierePLAF.getFieldBackground_Mandatory());
+		//	TaxIDType
+		m_taxidtype = fillTaxIDType();
+		fTaxIDType = new JComboBox<Object>(m_taxidtype);
+		createLine (fTaxIDType, "LCO_TaxIDType_ID", true);
+		fTaxIDType.setBackground(AdempierePLAF.getFieldBackground_Mandatory());
 		// TaxID
 		fTaxID = new POSTextField("TaxID", pos.getKeyboard());
 		fTaxID.addActionListener(this);
@@ -187,8 +192,8 @@ public final class VPOSBPartner extends CDialog implements ActionListener
 		fName.addActionListener(this);
 		createLine (fName, "Name", false).setFontBold(true);
 		//	Name2
-		fName2 = new POSTextField("Name2", pos.getKeyboard());
-		createLine (fName2, "Name2", false);
+//		fName2 = new POSTextField("Name2", pos.getKeyboard());
+//		createLine (fName2, "Name2", false);
 		
 		//	Contact
 		fContact = new POSTextField("Contact", pos.getKeyboard());
@@ -286,8 +291,9 @@ public final class VPOSBPartner extends CDialog implements ActionListener
 		//	BPartner - Load values
 		fValue.setText(partner.getValue());
 		fName.setText(partner.getName());
-		fName2.setText(partner.getName2());
-
+//		fName2.setText(partner.getName2());
+		fTaxIDType.setSelectedItem(getTaxIDType((int)partner.get_ValueOfColumn(MColumn.getColumn_ID(MBPartner.Table_Name, "LCO_TaxidType_ID"))));
+		
 		//	Contact - Load values
 		partnerLocation = partner.getLocation(
 			Env.getContextAsInt(Env.getCtx(), windowNo, "C_BPartner_Location_ID"));
@@ -313,6 +319,20 @@ public final class VPOSBPartner extends CDialog implements ActionListener
 		return true;
 	}	//	loadBPartner
 
+	/**
+	 *	Search m_taxidtype for key
+	 * 	@param key	LCO_TaxidType_ID
+	 * 	@return	TaxIDType
+	 */
+	private KeyNamePair getTaxIDType(int key) {
+		for (int i = 0; i < m_taxidtype.length; i++)
+		{
+			KeyNamePair p = (KeyNamePair)m_taxidtype[i];
+			if (p.getKey() == key)
+				return p;
+		}
+		return new KeyNamePair(-1, " ");
+	}
 
 	/**
 	 *	Action Listener
@@ -396,7 +416,13 @@ public final class VPOSBPartner extends CDialog implements ActionListener
 		partner.setValue(fValue.getText());
 		//
 		partner.setName(fName.getText());
-		partner.setName2(fName2.getText());
+//		partner.setName2(fName2.getText());
+		
+		KeyNamePair p = (KeyNamePair)fTaxIDType.getSelectedItem();
+		if (p != null && p.getKey() > 0)
+			partner.set_ValueOfColumn(MColumn.getColumn_ID(MBPartner.Table_Name, "LCO_TaxIdType_ID"), p.getKey());
+		else
+			partner.set_ValueOfColumn(MColumn.getColumn_ID(MBPartner.Table_Name, "LCO_TaxIdType_ID"), 0);
 
 		if (partner.save())
 			log.fine("C_BPartner_ID=" + partner.getC_BPartner_ID());
@@ -448,5 +474,15 @@ public final class VPOSBPartner extends CDialog implements ActionListener
 			return 0;
 		return partner.getC_BPartner_ID();
 	}	//	getBPartner_ID
+	
+	/**
+	 *	Fill TaxID Type
+	 * 	@return KeyNamePair Array of Greetings
+	 */
+	private Object[] fillTaxIDType() {
+		String sql = "SELECT LCO_TaxIDType_ID, Name FROM LCO_TaxIDType WHERE IsActive='Y' ORDER BY 2";
+		sql = MRole.getDefault().addAccessSQL(sql, "LCO_TaxIDType", MRole.SQL_NOTQUALIFIED, MRole.SQL_RO);
+		return DB.getKeyNamePairs(sql, true);
+	}	//	fillGreeting
 
 }	//	VPOSBPartner
