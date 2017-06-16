@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ID_POS
+Bundle-Name: POS
 Bundle-SymbolicName: org.idempiere.pos;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Ing. Victor Suárez - victor.suarez.is@gmail.com
@@ -11,7 +11,7 @@ Require-Bundle: org.adempiere.base;bundle-version="3.1.0",
  org.adempiere.ui;bundle-version="3.1.0",
  org.adempiere.ui.swing;bundle-version="3.1.0",
  org.adempiere.pipo;bundle-version="3.1.0"
-Bundle-Activator: org.adempiere.plugin.utils.AdempiereActivator
+Bundle-Activator: org.adempiere.plugin.utils.Incremental2PackActivator
 Service-Component: OSGI-INF/ModelFactoryPOS.xml,
  OSGI-INF/FormFactoryPOS.xml
 Export-Package: org.adempiere.pos
