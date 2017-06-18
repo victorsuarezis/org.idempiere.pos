@@ -8,7 +8,7 @@ This is the Swing Version. You can see WebUI version: https://bitbucket.org/vict
 
 - You should use it, with my iDempiere Core Fork: https://bitbucket.org/victorsuarez/idempiere_dev, because I have modified some clases from core for to complete adaptation. Or simply copy the Swing Plugin classes, modified in this commit: https://bitbucket.org/victorsuarez/idempiere_dev/commits/0a4a6779079374daeea8f8897593943212cfac12
 
-- Make the packaging of the 2 Pack included, in case you do not mount it automatically.
+- Make the packaging of the 2Pack_1.0.0 and 2Pack_1.0.1 included, in case you do not mount it automatically.
 
 - Create a new record in the "POS Terminal" window.
 
