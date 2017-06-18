@@ -2,7 +2,7 @@
 
 Point Of Sales Developed by Yamel Senih (ysenih@erpcya.com) and ERP Consultores y Asociados (http://erpcya.com/es/), for ADempiere 3.9.0 (http://www.adempiere.net/web/guest/inicio). Migrated and adapted by Victor Suarez (victor.suarez.is@gmail.com) to iDempiere ERP Plugin.
 
-This is the Swing Version. You can see WebUI version: https://bitbucket.org/victorsuarez/org.idempire.wpos
+This is the Swing Version. You can see WebUI version: https://bitbucket.org/victorsuarez/org.idempiere.wpos
 
 You should use, with my iDempiere Core Fork: https://bitbucket.org/victorsuarez/idempiere_dev, because I have modified some clases from core for to complete adaptation.
 
