@@ -10,6 +10,10 @@ This is the Swing Version. You can see WebUI version: https://bitbucket.org/vict
 
 - Make the packaging of the 2 Pack included, in case you do not mount it automatically.
 
+- Create a new record in the "POS Terminal" window.
+
+- Cick in "VPOS" Form to Open POS.
+
 
 Soon to publish other plugins for the management of peripherals, for Venezuela Location.
 
