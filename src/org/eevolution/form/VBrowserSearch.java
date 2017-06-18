@@ -25,11 +25,11 @@ import java.util.ArrayList;
 import javax.swing.Box;
 
 import org.adempiere.controller.SmallViewEditable;
-import org.adempiere.exceptions.ValueChangeEvent;
 import org.compiere.apps.ALayout;
 import org.compiere.apps.ALayoutConstraint;
 import org.compiere.grid.ed.VEditor;
 import org.compiere.grid.ed.VEditorFactory;
+import org.compiere.grid.ed.VEditorFactoryPOS;
 import org.compiere.model.GridField;
 import org.compiere.swing.CEditor;
 import org.compiere.swing.CEditorPOS;
@@ -222,14 +222,8 @@ public class VBrowserSearch extends BrowserSearch implements SmallViewEditable {
 	}
 
 	@Override
-	public void valueChange(ValueChangeEvent evt) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public CEditorPOS createEditor(org.adempiere.model.GridField field) {
-		// TODO Auto-generated method stub
-		return null;
-	}	
+		return (CEditorPOS) (VEditorFactoryPOS.getEditor(field, false));
+	}
+	
 }

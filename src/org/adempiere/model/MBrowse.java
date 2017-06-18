@@ -18,6 +18,7 @@
 package org.adempiere.model;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -128,11 +129,16 @@ public class MBrowse extends X_AD_Browse {
 					.append(MBrowseField.COLUMNNAME_IsQueryCriteria)
 					.append("=?");
 
-			return new Query(getCtx(), MBrowseField.Table_Name,
+			List<MBrowseField> browseField = new ArrayList<MBrowseField>();
+			List<GenericPO> bF = new Query(getCtx(), MBrowseField.Table_Name,
 					whereClause.toString(), get_TrxName())
 					.setParameters(get_ID(), "Y").setOnlyActiveRecords(true)
-					//	FR [ 267 ] Add SeqNoGrid
 					.setOrderBy(MBrowseField.COLUMNNAME_SeqNoGrid).list();
+			for(GenericPO bField : bF) {
+				MBrowseField myField = new MBrowseField(p_ctx, bField.get_ID(), get_TrxName());
+				browseField.add(myField);
+			}
+			return browseField;
 		}
 		return m_CriterialFields;
 	}

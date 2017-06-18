@@ -171,9 +171,9 @@ public abstract class SmallViewController implements SmallViewEditable, Vetoable
 			createEditors(); // Create the UI editors for each gridField
 			//	Instance Default view
 			initComponents(); // Instruct the view to initialize
-			for (int i = 0; i < editors.size(); i++) {
-				formatEditor(editors.get(i),editorsTo.get(i)); // Instruct the view to add  to the view and format the editor. 
-			}
+//			for (int i = 0; i < editors.size(); i++) {
+//				formatEditor(editors.get(i),editorsTo.get(i)); // Instruct the view to add  to the view and format the editor. 
+//			}
 			//	
 			dynamicDisplay();  // Set the default values
 			setLoaded(true);

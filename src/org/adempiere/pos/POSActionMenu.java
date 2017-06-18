@@ -229,7 +229,7 @@ public class POSActionMenu implements  ActionListener , POSQueryListener{
                 Dimension size = new Dimension(1024, 768);
                 FormFrame ff = new FormFrame(pos.getWindowNo());
                 ff.setSize(size);
-                MBrowse browse = new MBrowse(Env.getCtx(), 50056 , null);
+                MBrowse browse = new MBrowse(Env.getCtx(), 1000001 , null);
                 new VBrowser(ff, true , pos.getWindowNo(), "" , browse , "" , true, "", true);
                 ff.pack();
                 AEnv.showCenterScreen(ff.getWindow());
@@ -238,7 +238,7 @@ public class POSActionMenu implements  ActionListener , POSQueryListener{
                 Dimension size = new Dimension(1024, 768);
                 FormFrame ff = new FormFrame(pos.getWindowNo());
                 ff.setSize(size);
-                MBrowse browse = new MBrowse(Env.getCtx(), 50057 , null);
+                MBrowse browse = new MBrowse(Env.getCtx(), 1000001, null);
                 new VBrowser(ff, true , pos.getWindowNo(), "" , browse , "" , true, "", true);
                 ff.pack();
                 AEnv.showCenterScreen(ff.getWindow());

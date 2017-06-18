@@ -25,11 +25,11 @@ import org.compiere.util.KeyNamePair;
  *  @author Adempiere (generated) 
  *  @version Release 3.8.0
  */
-public interface I_AD_View_Column 
+public interface I_AD_ViewColumn 
 {
 
     /** TableName=AD_View_Column */
-    public static final String Table_Name = "AD_View_Column";
+    public static final String Table_Name = "AD_ViewColumn";
 
     /** AD_Table_ID=53232 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
@@ -79,7 +79,7 @@ public interface I_AD_View_Column
 	public int getAD_Org_ID();
 
     /** Column name AD_View_Column_ID */
-    public static final String COLUMNNAME_AD_View_Column_ID = "AD_View_Column_ID";
+    public static final String COLUMNNAME_AD_ViewColumn_ID = "AD_ViewColumn_ID";
 
 	/** Set View Column.
 	  * Column of View

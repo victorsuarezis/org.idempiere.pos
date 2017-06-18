@@ -36,7 +36,7 @@ import org.compiere.util.DB;
  *  @contributor Ing. Victor Suarez - victor.suarez.is@gmail.com 
  * 		- Migration POS from ADempiere 3.9.0 to iDempiere ERP Plugin.
  */
-public class MViewColumn extends X_AD_View_Column {
+public class MViewColumn extends X_AD_ViewColumn {
 	
 	/**
 	 * 

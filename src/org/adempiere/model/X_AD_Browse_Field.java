@@ -20,7 +20,7 @@ package org.adempiere.model;
 import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.*;
-import org.adempiere.model.I_AD_View_Column;
+import org.adempiere.model.I_AD_ViewColumn;
 
 /** Generated Model for AD_Browse_Field
  *  @author iDempiere (generated) 
@@ -294,7 +294,7 @@ public class X_AD_Browse_Field extends PO implements I_AD_Browse_Field, I_Persis
 
 	public I_AD_ViewColumn getAxis_Parent_Column() throws RuntimeException
     {
-		return (I_AD_ViewColumn)MTable.get(getCtx(), I_AD_View_Column.Table_Name)
+		return (I_AD_ViewColumn)MTable.get(getCtx(), I_AD_ViewColumn.Table_Name)
 			.getPO(getAxis_Parent_Column_ID(), get_TrxName());	}
 
 	/** Set Axis Parent Column.

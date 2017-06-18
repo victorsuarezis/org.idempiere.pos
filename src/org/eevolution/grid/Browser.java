@@ -34,7 +34,7 @@ import java.util.logging.Level;
 import org.adempiere.exceptions.AdempiereException;
 import org.adempiere.exceptions.DBException;
 import org.adempiere.impexp.ArrayExcelExporter;
-import org.adempiere.model.I_AD_View_Column;
+import org.adempiere.model.I_AD_ViewColumn;
 import org.adempiere.model.MBrowse;
 import org.adempiere.model.MBrowseField;
 import org.adempiere.model.MView;
@@ -1070,10 +1070,10 @@ public abstract class Browser {
 		axisParametersValues = new ArrayList<>();
 
 		try {
-			I_AD_View_Column xcol, pcol, ycol;
+			I_AD_ViewColumn xcol, pcol, ycol;
 			xcol = field.getAD_View_Column();
-			pcol = (I_AD_View_Column) field.getAxis_Parent_Column();
-			ycol = (I_AD_View_Column) field.getAxis_Column();
+			pcol = (I_AD_ViewColumn) field.getAxis_Parent_Column();
+			ycol = (I_AD_ViewColumn) field.getAxis_Column();
 
 			String columnName = xcol.getAD_Column().getColumnName();
 
@@ -1289,7 +1289,7 @@ public abstract class Browser {
 	 * @param viewColumn
 	 * @return
 	 */
-	public String getAxisSQLWhere(I_AD_View_Column viewColumn)
+	public String getAxisSQLWhere(I_AD_ViewColumn viewColumn)
 	{
 		 MViewDefinition viewDefinition = (MViewDefinition) viewColumn.getAD_View_Definition();
 		 MTable tableBaseName = (MTable) viewDefinition.getAD_Table();

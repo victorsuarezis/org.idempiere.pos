@@ -184,7 +184,7 @@ public interface I_AD_Browse_Field
 	/** Get Axis Parent Column	  */
 	public int getAxis_Parent_Column_ID();
 
-	public org.compiere.model.I_AD_ViewColumn getAxis_Parent_Column() throws RuntimeException;
+	public I_AD_ViewColumn getAxis_Parent_Column() throws RuntimeException;
 
     /** Column name Callout */
     public static final String COLUMNNAME_Callout = "Callout";

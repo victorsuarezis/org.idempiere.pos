@@ -25,7 +25,7 @@ import org.compiere.util.KeyNamePair;
 /** Generated Model for AD_View_Column
  *  @author Adempiere (generated) 
  *  @version Release 3.8.0 - $Id$ */
-public class X_AD_View_Column extends PO implements I_AD_View_Column, I_Persistent 
+public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent 
 {
 
 	/**
@@ -34,7 +34,7 @@ public class X_AD_View_Column extends PO implements I_AD_View_Column, I_Persiste
 	private static final long serialVersionUID = 20150223L;
 
     /** Standard Constructor */
-    public X_AD_View_Column (Properties ctx, int AD_View_Column_ID, String trxName)
+    public X_AD_ViewColumn (Properties ctx, int AD_View_Column_ID, String trxName)
     {
       super (ctx, AD_View_Column_ID, trxName);
       /** if (AD_View_Column_ID == 0)
@@ -47,7 +47,7 @@ public class X_AD_View_Column extends PO implements I_AD_View_Column, I_Persiste
     }
 
     /** Load Constructor */
-    public X_AD_View_Column (Properties ctx, ResultSet rs, String trxName)
+    public X_AD_ViewColumn (Properties ctx, ResultSet rs, String trxName)
     {
       super (ctx, rs, trxName);
     }
@@ -109,9 +109,9 @@ public class X_AD_View_Column extends PO implements I_AD_View_Column, I_Persiste
 	public void setAD_View_Column_ID (int AD_View_Column_ID)
 	{
 		if (AD_View_Column_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_AD_View_Column_ID, null);
+			set_ValueNoCheck (COLUMNNAME_AD_ViewColumn_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_AD_View_Column_ID, Integer.valueOf(AD_View_Column_ID));
+			set_ValueNoCheck (COLUMNNAME_AD_ViewColumn_ID, Integer.valueOf(AD_View_Column_ID));
 	}
 
 	/** Get View Column.
@@ -119,7 +119,7 @@ public class X_AD_View_Column extends PO implements I_AD_View_Column, I_Persiste
 	  */
 	public int getAD_View_Column_ID () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_AD_View_Column_ID);
+		Integer ii = (Integer)get_Value(COLUMNNAME_AD_ViewColumn_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
